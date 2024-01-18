@@ -1,2 +1,6 @@
 .vs
 Library/PackageCache
+Logs*
+obj/Debug/*
+Build*
+Temp*
