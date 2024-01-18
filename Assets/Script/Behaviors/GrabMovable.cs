@@ -130,6 +130,11 @@ public class GrabMovable : MonoBehaviour
             yield return null;
         }
 
+        if (_grabbedGO == null)
+        {
+            yield break;
+        }
+
         // Set the initial local position within the new parent
         _grabbedGO.transform.localPosition = Vector3.zero;
 

@@ -142,7 +142,7 @@ public class MainMenu : MonoBehaviour
         _newGame.clicked += () => {
             _uiAudio.PlayOneShot(_uiAudio.clip);
 
-            StartCoroutine(LoadSceneWithTransition("ROOM_1"));
+            StartCoroutine(LoadSceneWithTransition("DUNGEON"));
         };
 
         _settings.clicked += () =>
