@@ -1,0 +1,98 @@
+.menu-link {
+    -unity-background-image-tint-color: rgba(255, 255, 255, 0);
+    align-self: flex-start;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(255, 255, 255, 0);
+    border-left-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+    transition: border-bottom-color 0.2s ease 0s;
+    padding: 0 0 10px 0;
+    margin: 25px;
+    -unity-font: url('project://database/Assets/Fonts/ABeeZee-Regular.ttf?fileID=12800000&guid=dbf7f1fee1ccde249aaa536c64c3c9ca&type=3#ABeeZee-Regular');
+    -unity-font-definition: url('project://database/Assets/Fonts/ABeeZee-Regular%20SDF.asset?fileID=11400000&guid=6a571053b600fb64285706d4809f2382&type=2#ABeeZee-Regular SDF');
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+}
+
+.menu-li:hover {
+}
+
+.menu-li:hover .border,
+.menu-li.active .border,
+.menu-li:focus .border {
+    opacity: 1;
+}
+
+.title {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.border {
+    opacity: 0;
+    width: 50px;
+    height: 3px;
+    position: absolute;
+    top: 35px;
+    background-image: url('project://database/Assets/UI%20Toolkit/_.png?fileID=2800000&guid=6e0fc014090ca96468b1f830aa2d2cb4&type=3#_');
+    transition: opacity 0.2s ease 0s;
+}
+
+.menu-li {
+    margin-top: 15px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    margin-left: 15px;
+}
+
+.group {
+    background: linear-gradient(to right, rgb(0, 0, 0), rgba(0, 0, 0, 0));
+}
+
+.fondu {
+    opacity: 0;
+    background-color: rgb(0, 0, 0);
+    transition: all 1s ease 0s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.fondu.show {
+    opacity: 1;
+}
+
+.panel {
+    display: none;
+}
+
+.panel.active {
+    display: flex;
+}
+
+.unity-label {
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    -unity-font: url('project://database/Assets/Fonts/ABeeZee-Regular.ttf?fileID=12800000&guid=dbf7f1fee1ccde249aaa536c64c3c9ca&type=3#ABeeZee-Regular');
+    -unity-font-definition: url('project://database/Assets/Fonts/ABeeZee-Regular%20SDF.asset?fileID=11400000&guid=6a571053b600fb64285706d4809f2382&type=2#ABeeZee-Regular SDF');
+}
+
+.tab {
+    display: none;
+}
+
+.tab.active {
+    display: flex;
+}
+
+.hide {
+    display: none;
+}
