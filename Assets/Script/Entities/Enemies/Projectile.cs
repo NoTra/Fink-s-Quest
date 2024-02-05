@@ -6,11 +6,13 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private SphereCollider _collider;
-    [SerializeField] private GameObject _impactParticle;
+    public Thrower Thrower;
+    private SphereCollider _collider;    
     public float _throwStrength;
     public float _damage = 1f;
     [SerializeField] private string[] _invulnerableTag;
+    [SerializeField] private GameObject _impactParticle;
+    private AudioSource _audioSource;
 
     private void Awake()
     {
@@ -20,7 +22,7 @@ public class Projectile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -42,8 +44,11 @@ public class Projectile : MonoBehaviour
             {
                 hittable.Hit(transform.position, _throwStrength, _damage);
             }
-            
-            Destroy(gameObject);
+
+            Debug.Log("Play impact sound");
+            AudioSource.PlayClipAtPoint(GameManager.Instance._audioManager._laserImpactSound, transform.position);
+
+            DestroySelf();
         }
 
         // Si le projectile touche un layer "Ground" ou "Wall", on le détruit
@@ -52,9 +57,9 @@ public class Projectile : MonoBehaviour
             other.gameObject.layer == LayerMask.NameToLayer("Wall") || 
             other.gameObject.layer == LayerMask.NameToLayer("Grabbable")
         ) {
-            Debug.Log("Projectile hit a wall or the ground");
+            Debug.Log("Play impact sound");
+            AudioSource.PlayClipAtPoint(GameManager.Instance._audioManager._laserImpactSound, transform.position);
 
-            // On instancie une particule d'impact
             /*GameObject impactParticle = Instantiate(_impactParticle, transform.position, Quaternion.identity);
             impactParticle.transform.position = transform.position;
 
@@ -65,8 +70,20 @@ public class Projectile : MonoBehaviour
             // On aligne la rotation de la particule d'impact avec la normale du mur
             impactParticle.transform.rotation = Quaternion.LookRotation(wallNormal);
             */
-            
-            Destroy(gameObject);
+
+            DestroySelf();
         }
+    }
+
+    public void DestroySelf()
+    {
+        // On instancie une particule d'impact
+        GameObject impactParticle = Instantiate(_impactParticle, transform.position, Quaternion.identity);
+
+        // On détruit la particule d'impact après 1 seconde
+        Destroy(impactParticle, 1f);
+
+        Thrower._projectiles.Remove(this);
+        Destroy(gameObject);
     }
 }

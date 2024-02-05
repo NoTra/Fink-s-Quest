@@ -65,27 +65,15 @@ public class Striker : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(origin, eulerAngle * transform.forward, out hit, _strikeRange, ~_layerToExclude))
             {
-                Debug.Log("Hit something : " + hit.collider.gameObject);
                 Hittable hitted = hit.collider.GetComponent<Hittable>();
 
                 if (hitted != null && !hitted._isInvincible)
                 {
-                    Debug.Log("Hitted : " + hitted.gameObject);
                     hitted.Hit(transform.position, _strikeStrength, _damage);
-                } else
-                {
-                    Debug.Log("Pas de collider : " + hit.collider.gameObject.name);
                 }
 
-                if (hitted != null && hitted._hitSound != null)
+                if (hitted == null || hitted._hitSound == null)
                 {
-                    Debug.Log("Play sound of Hittable");
-                    // Play the impact sound of the hittable
-                    _audioSource.PlayOneShot(hit.collider.GetComponent<Hittable>()._hitSound);
-                }
-                else if (_audioSource != null)
-                {
-                    Debug.Log("Play default sound");
                     // Play the default impact sound
                     _audioSource.PlayOneShot(GameManager.Instance._audioManager._swordHitSound);
                 }

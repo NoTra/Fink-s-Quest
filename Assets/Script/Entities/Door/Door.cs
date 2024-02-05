@@ -39,12 +39,17 @@ public class Door : Openable
 
             // Play sound doorOpen
             _audioSource.PlayOneShot(GameManager.Instance._audioManager._openDoorSound);
+
+            // Play sound secretFound after 0.5s
+            StartCoroutine(PlaySecretFoundSound());
+
             _previousOpenState = _isOpen;
 
             // On cherche tous les Thrower de la salle et on les désactive
             foreach (Thrower thrower in GameManager.Instance._currentRoom.GetComponentsInChildren<Thrower>())
             {
                 thrower.isActivated = false;
+                thrower.DestroyAllProjectiles();
             }
         }
         else
@@ -56,5 +61,11 @@ public class Door : Openable
         }
     }
 
+    private IEnumerator PlaySecretFoundSound()
+    {
+        yield return new WaitForSeconds(1f);
+        // _audioSource.PlayOneShot(GameManager.Instance._audioManager._secretFoundSound);
+        GameManager.Instance._audioManager._audioSource.PlayOneShot(GameManager.Instance._audioManager._roomClearedSound);
+    }
 
 }

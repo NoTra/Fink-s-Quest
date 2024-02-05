@@ -15,6 +15,7 @@ public class Hittable : MonoBehaviour
     [SerializeField] private Renderer _renderer;
     private Rigidbody _rigidbody;
 
+    public AudioSource _audioSource;
     public AudioClip _hitSound;
     public AudioClip[] _deathSounds;
 
@@ -38,6 +39,7 @@ public class Hittable : MonoBehaviour
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _audioSource = GetComponent<AudioSource>();
 
         _currentHP = _maxHP;
     }
@@ -78,7 +80,7 @@ public class Hittable : MonoBehaviour
 
     /**
      * 
-     * Called when the enemy is hit
+     * Called when the creature is hit
      *
      * @param Enemy enemy
      * 
@@ -94,7 +96,14 @@ public class Hittable : MonoBehaviour
         {
             _healthBar.value = _currentHP;
         }
-        
+
+        if (_hitSound != null)
+        {
+            Debug.Log("Play sound of Hittable");
+            // Play the impact sound of the hittable
+            _audioSource.PlayOneShot(_hitSound);
+        }
+
         // Make the player flash red
         StartCoroutine(FlashRed());
 

@@ -9,22 +9,31 @@ public class Thrower : MonoBehaviour
     [SerializeField] private float _throwStrength = 5f;
     [SerializeField] private float _timeBetweenThrows = 1f;
     [SerializeField] private float _damage = 1f;
+    [SerializeField] private GameObject Ball;
+    private AudioSource _audioSource;
+
+    public List<Projectile> _projectiles = new List<Projectile>();
+
     public bool isActivated = true;
-    private Room _currentRoom;
+    private GameObject _currentRoom;
 
     private float _lastThrowTime;
 
     // Start is called before the first frame update
     void Start()
     {
-        _currentRoom = GetComponentInParent<Room>();
+        _currentRoom = GetComponentInParent<Room>().gameObject;
+        _audioSource = GetComponent<AudioSource>();
+        Debug.Log("currentRoom : " + _currentRoom);
+
+        _lastThrowTime = Time.time;
     }
 
     // Update is called once per frame
     void Update()
     {
         // Every _timeBetweenThrows seconds, launch ThrowProjectile
-        if (_currentRoom == GameManager.Instance._currentRoom && isActivated && Time.time - _lastThrowTime > _timeBetweenThrows)
+        if (_currentRoom == GameManager.Instance._currentRoom && isActivated && (Time.time - _lastThrowTime) > _timeBetweenThrows)
         {
             _lastThrowTime = Time.time;
             ThrowProjectile();
@@ -50,5 +59,41 @@ public class Thrower : MonoBehaviour
         projectileScript._damage = _damage;
 
         projectile.GetComponent<Rigidbody>().AddForce(direction.normalized * _throwStrength, ForceMode.Impulse);
+
+        projectileScript.Thrower = this;
+
+        _projectiles.Add(projectileScript);
+
+        _audioSource.PlayOneShot(GameManager.Instance._audioManager._laserShotSound);
+    }
+
+    public void DestroyAllProjectiles()
+    {
+        var _projectilesCopy = new List<Projectile>(_projectiles);
+        foreach (Projectile projectile in _projectilesCopy)
+        {
+            projectile.DestroySelf();
+        }
+
+        _audioSource.PlayOneShot(GameManager.Instance._audioManager._laserImpactSound);
+        _projectiles.Clear();
+
+        // On éteint la tour
+        // Ball.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.black);
+        Color startColor = Ball.GetComponent<MeshRenderer>().material.GetColor("_EmissionColor");
+        StartCoroutine(LerpMaterialColor(startColor, Color.black, 1f));
+    }
+
+    IEnumerator LerpMaterialColor(Color startColor, Color endColor, float duration)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            Ball.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.Lerp(startColor, endColor, elapsedTime / duration));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        Ball.GetComponent<FloatAnimation>().enabled = false;
     }
 }

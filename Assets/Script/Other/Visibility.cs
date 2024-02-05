@@ -38,17 +38,14 @@ public class Visibility : MonoBehaviour
     {
         if (GameManager.Instance.Player.GetDrive() == Player.Drive.SOUL)
         {
-            Debug.Log("player is soul !");
             if (isVisibleForSoul)
             {
-                Debug.Log("Activate crate because player is soul");
                 // Activate _meshRenderer && _boxCollider
                 _meshRenderer.enabled = true;
                 _boxCollider.enabled = true;
             }
             else
             {
-                Debug.Log("Désactivate crate because player is soul");
                 // Désactivate _meshRenderer && _boxCollider
                 _meshRenderer.enabled = false;
                 _boxCollider.enabled = false;
@@ -58,13 +55,11 @@ public class Visibility : MonoBehaviour
         {
             if (isVisibleForSoul)
             {
-                Debug.Log("Activate crate because player is not soul");
                 _meshRenderer.enabled = false;
                 _boxCollider.enabled = false;
             }
             else
             {
-                Debug.Log("Désactivate crate because player is not soul");
                 _meshRenderer.enabled = true;
                 _boxCollider.enabled = true;
             }

@@ -15,6 +15,9 @@ public class AudioManager : MonoBehaviour
     public AudioClip _swordHitSound;
     public AudioClip _hiddenOpenDoorSound;
     public AudioClip _typingSound;
+    public AudioClip _laserShotSound;
+    public AudioClip _laserImpactSound;
+    public AudioClip _roomClearedSound;
 
     public AudioSource _audioSource;
 
