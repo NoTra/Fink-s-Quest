@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -51,7 +49,7 @@ public class Skeleton : MonoBehaviour
             // Chaque seconde on frappe
             if (elapsedTime > _timeBetweenStrikes)
             {
-                RaycastHit hit;
+                /*RaycastHit hit;
                 if (Physics.Raycast(transform.position, transform.forward, out hit, _strikeBehavior._strikeRange, ~_strikeBehavior._layerToExclude))
                 {
                     if (hit.collider.CompareTag(_strikeBehavior._targetTag))
@@ -60,7 +58,9 @@ public class Skeleton : MonoBehaviour
 
                         _timeSinceLastStrike = Time.time;
                     }
-                }
+                }*/
+
+                _animator.SetTrigger("Strike");
             }
         } else
         {
