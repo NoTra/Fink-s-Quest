@@ -5,7 +5,8 @@ using UnityEngine.InputSystem;
 
 public class GrabMovable : MonoBehaviour
 {
-    PlayerInput _playerInput;
+    private PlayerInput _playerInput;
+    private Player _player;
 
     private InputAction _grabAction;
 
@@ -13,14 +14,10 @@ public class GrabMovable : MonoBehaviour
     private GameObject _grabbedGO;
     [SerializeField] private GameObject _grabbedSlot;
 
-    
-
-    private PlayerController _playerController;
-
     private void Awake()
     {
-        _playerInput = GameManager.Instance.Player._playerInput;
-        _playerController = gameObject.transform.parent.GetComponent<PlayerController>();
+        _player = GameManager.Instance.Player;
+        _playerInput = _player._playerInput;
     }
 
     private void OnEnable()
@@ -45,7 +42,7 @@ public class GrabMovable : MonoBehaviour
 
     void Update()
     {
-        if (_grabbedGO != null && _playerController._canMove)
+        if (_grabbedGO != null && _player._canMove)
         {
             _grabbedGO.transform.localPosition = Vector3.zero;
         }
@@ -53,7 +50,7 @@ public class GrabMovable : MonoBehaviour
 
     public void OnGrab(InputAction.CallbackContext context)
     {
-        if (!_playerController._canGrab || !context.performed)
+        if (!_player._canGrab || !context.performed)
         {
             return;
         }
@@ -68,8 +65,8 @@ public class GrabMovable : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(origin, transform.forward, out hit, 0.5f, LayerMask.GetMask("Grabbable")))
         {
-            _playerController._isGrabbing = true;
-            _playerController._canMove = false;
+            _player._isGrabbing = true;
+            _player._canMove = false;
 
             _grabbedGO = hit.transform.gameObject;
 
@@ -101,7 +98,7 @@ public class GrabMovable : MonoBehaviour
         grabbedRigibdoy.interpolation = RigidbodyInterpolation.Interpolate;
         grabbedRigibdoy.collisionDetectionMode = CollisionDetectionMode.Continuous;
 
-        _playerController._isGrabbing = false;
+        _player._isGrabbing = false;
 
         // On remet le grabbedGO dans le monde
         _grabbedGO.transform.parent = _grabbedGOParent.transform;
@@ -141,6 +138,6 @@ public class GrabMovable : MonoBehaviour
         // Change parent of grabbed object to player
         _grabbedGO.transform.parent = _grabbedSlot.transform;
 
-        _playerController._canMove = true;
+        _player._canMove = true;
     }
 }

@@ -10,7 +10,6 @@ public class PlayerDash : PlayerSystem
     [SerializeField] AnimationCurve _dashCurve = AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f);
     [SerializeField] private float _timeBetweenDashes = 1f; // Temps entre chaque dash
     private float _lastDashTime = 0f;
-    private bool _isDashing = false;
 
     [SerializeField] private TrailRenderer trail;
 
@@ -59,7 +58,6 @@ public class PlayerDash : PlayerSystem
         }
 
         float elapsedTime = 0f;
-        _isDashing = true;
 
         while (elapsedTime < _dashDuration)
         {
@@ -91,7 +89,5 @@ public class PlayerDash : PlayerSystem
 
         trail.emitting = false;
         trail.enabled = false;
-
-        _isDashing = false;
     }
 }

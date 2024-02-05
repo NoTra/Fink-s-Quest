@@ -14,8 +14,6 @@ public class CameraMovement : MonoBehaviour
     public float _cameraMinZ;
     public float _cameraMaxZ;
 
-    private float _cameraZOffset = 1f;
-
     [SerializeField] private float _cameraZOffsetForward;
     [SerializeField] private float _cameraZOffsetIdle;
     [SerializeField] private float _cameraZOffsetBackward;

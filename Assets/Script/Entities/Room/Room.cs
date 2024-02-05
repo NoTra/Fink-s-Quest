@@ -22,13 +22,9 @@ public class Room : MonoBehaviour
         // On est la room courante ? 
         if (GameManager.Instance._currentRoom == this.gameObject && _dialogBox != null)
         {
-            Debug.Log("Room " + this.name + " is the current room");
+            // Debug.Log("Room " + this.name + " is the current room");
             _dialogBox.enabled = true;
-        } else
-        {
-            Debug.Log("Room " + this.name + " is not the current room");
         }
-
     }
 
     private void OnEnable()

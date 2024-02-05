@@ -49,11 +49,11 @@ public class MainMenu : MonoBehaviour
     // Resolutions Choices
     [SerializeField] private List<string> _resolutions = new List<string> { "1920x1080", "1280x720", "800x600" };
 
-    [SerializeField] PlayerController _playerController;
-    Animator _playerAnimator;
-    Rigidbody _playerRigibody;
+    private Player _player;
+    private Animator _playerAnimator;
+    private Rigidbody _playerRigibody;
 
-    [SerializeField] AudioMixer _audioMixer;
+    [SerializeField] private AudioMixer _audioMixer;
 
     public static string[] panels = { "MainPanel", "SettingsPanel" };
 
@@ -69,10 +69,11 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
+        _player = GameManager.Instance.Player;
         if (GameManager.Instance._currentRoom  == null)
         {
             // On switch les actions maps
-            _playerController._playerInput.SwitchCurrentActionMap("UI");
+            _player._playerInput.SwitchCurrentActionMap("UI");
         }
         
         _root = GetComponent<UIDocument>().rootVisualElement;
@@ -106,10 +107,10 @@ public class MainMenu : MonoBehaviour
             _fondu.RemoveFromClassList("show");
         }
 
-        _playerController._player._drive = Player.Drive.BODY;
+        _player._drive = Player.Drive.BODY;
 
-        _playerAnimator = _playerController._playerAnimator;
-        _playerRigibody = _playerController._playerRigidbody;
+        _playerAnimator = _player.GetAnimator();
+        _playerRigibody = _player.GetRigidbody();
 
         BindForm();
 
