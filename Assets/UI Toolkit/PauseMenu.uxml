@@ -5,33 +5,33 @@
             <ui:Label tabindex="-1" text="Fink&apos;s Quest !" parse-escape-sequences="true" display-tooltip-when-elided="true" class="title" style="color: rgb(255, 255, 255); font-size: 80px; -unity-font: url(&apos;project://database/Assets/Fonts/MetalMania-Regular.ttf?fileID=12800000&amp;guid=91e156e09092c3040bf80df772c671fb&amp;type=3#MetalMania-Regular&apos;); -unity-font-definition: url(&apos;project://database/Assets/Fonts/MetalMania-Regular%20SDF.asset?fileID=11400000&amp;guid=7bb0ab9c0510ca14f8b9bcf57f8d95a5&amp;type=2#MetalMania-Regular SDF&apos;); -unity-text-outline-width: 0; -unity-text-outline-color: rgb(82, 62, 0);" />
             <ui:VisualElement name="MainPanel" class="panel active" style="flex-grow: 0; margin-left: 20px;">
                 <ui:VisualElement name="VisualElement" focusable="true" class="menu-li" style="flex-grow: 1;">
-                    <ui:Button text="Settings" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonSettings" view-data-key="SettingsPanel" class="menu-link" />
+                    <ui:Button text="Settings" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonSettings" view-data-key="SettingsPanel" focusable="false" class="menu-link" />
                     <ui:VisualElement name="border" class="border" />
                 </ui:VisualElement>
                 <ui:VisualElement name="VisualElement" focusable="true" class="menu-li" style="flex-grow: 1;">
-                    <ui:Button text="New Game" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonNewGame" class="menu-link" />
+                    <ui:Button text="New Game" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonNewGame" focusable="false" class="menu-link" />
                     <ui:VisualElement name="border" class="border" />
                 </ui:VisualElement>
                 <ui:VisualElement name="VisualElement" focusable="true" class="menu-li" style="flex-grow: 1;">
-                    <ui:Button text="Exit" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonExit" class="menu-link" />
+                    <ui:Button text="Exit" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonExit" focusable="false" class="menu-link" />
                     <ui:VisualElement name="border" class="border" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="SettingsPanel" class="panel" style="flex-grow: 1;">
                 <ui:VisualElement name="VisualElement" focusable="true" class="menu-li" style="flex-grow: 1;">
-                    <ui:Button text="&lt; Back to menu" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonBack" class="menu-link" />
+                    <ui:Button text="&lt; Back to menu" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonBack" focusable="false" class="menu-link" />
                     <ui:VisualElement name="border" class="border" />
                 </ui:VisualElement>
                 <ui:VisualElement name="VisualElement" focusable="true" class="menu-li" style="flex-grow: 1;">
-                    <ui:Button text="Image" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonImage" class="menu-link" />
+                    <ui:Button text="Image" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonImage" view-data-key="ImageTab" focusable="false" class="menu-link" />
                     <ui:VisualElement name="border" class="border" />
                 </ui:VisualElement>
                 <ui:VisualElement name="VisualElement" focusable="true" class="menu-li" style="flex-grow: 1;">
-                    <ui:Button text="Sound" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonSound" class="menu-link" />
+                    <ui:Button text="Sound" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonSound" view-data-key="SoundTab" focusable="false" class="menu-link" />
                     <ui:VisualElement name="border" class="border" />
                 </ui:VisualElement>
-                <ui:VisualElement name="VisualElement" focusable="true" class="menu-li" style="flex-grow: 1;">
-                    <ui:Button text="Shortcut" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonShortcuts" class="menu-link" />
+                <ui:VisualElement name="VisualElement" focusable="true" class="menu-li" style="flex-grow: 1; display: none;">
+                    <ui:Button text="Shortcut" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonShortcuts" focusable="false" class="menu-link" />
                     <ui:VisualElement name="border" class="border" />
                 </ui:VisualElement>
             </ui:VisualElement>
@@ -42,9 +42,10 @@
                 <ui:DropdownField label="Resolution" index="-1" choices="2560x1440,1920x1080" name="Resolution" />
             </ui:VisualElement>
             <ui:VisualElement name="SoundTab" class="tab" style="flex-grow: 1;">
-                <ui:SliderInt picking-mode="Ignore" label="Main volume" value="100" high-value="100" binding-path="MainMenu._mainVolume" name="MasterVolume" />
-                <ui:SliderInt picking-mode="Ignore" label="Music volume" value="42" high-value="100" name="MusicVolume" binding-path="MainMenu._musicVolume" />
-                <ui:SliderInt picking-mode="Ignore" label="Sound volume" value="42" high-value="100" name="SoundVolume" binding-path="MainMenu._soundVolume" />
+                <ui:SliderInt label="Main volume" value="100" high-value="100" binding-path="MainMenu._mainVolume" name="MasterVolume" />
+                <ui:SliderInt label="Music volume" value="42" high-value="100" name="MusicVolume" binding-path="MainMenu._musicVolume" />
+                <ui:SliderInt label="Sound volume" value="42" high-value="100" name="SoundVolume" binding-path="MainMenu._soundVolume" />
+                <ui:SliderInt label="Interface volume" value="42" high-value="100" name="InterfaceVolume" binding-path="MainMenu._interfaceVolume" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

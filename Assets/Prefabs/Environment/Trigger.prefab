@@ -70,7 +70,7 @@ MonoBehaviour:
   _room: {fileID: 0}
   _nextRoom: {fileID: 0}
   _mirrorTrigger: {fileID: 0}
-  _outPoint: {fileID: 0}
+  _outPoint: {fileID: 6257450044425453939}
   _transitionCurve:
     serializedVersion: 2
     m_Curve:

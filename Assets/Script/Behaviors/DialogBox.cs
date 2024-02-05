@@ -2,6 +2,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using System.Text.RegularExpressions;
+using System.Text;
 
 public class DialogBox : MonoBehaviour
 {
@@ -25,12 +27,13 @@ public class DialogBox : MonoBehaviour
     private void Awake()
     {
         _dialogPanel = GameManager.Instance._dialogPanel;
-        _textMeshPro = GameManager.Instance._textDialog;
         _audioSource = _dialogPanel.GetComponent<AudioSource>();
+        _textMeshPro = GameManager.Instance._textDialog;
     }
 
     private void Start()
     {
+        
     }
 
     private void OnEnable()
@@ -39,7 +42,7 @@ public class DialogBox : MonoBehaviour
         if (_message != "")
         {
             // On désactive les controles du joueur
-            GameManager.Instance._playerInput.SwitchCurrentActionMap("UI");
+            GameManager.Instance.Player._playerInput.SwitchCurrentActionMap("UI");
 
             if (_freezeTime)
             {
@@ -61,21 +64,71 @@ public class DialogBox : MonoBehaviour
             }
 
             // On récupère le device actuel
-            string device = GameManager.Instance._playerInput.currentControlScheme;
+            string device = GameManager.Instance.Player._playerInput.currentControlScheme;
 
-            InputAction action = GameManager.Instance._playerInput.actions.FindAction("Activate");
-            int bindingIndex = action.GetBindingIndex(group: device);
-            var displayString = action.GetBindingDisplayString(bindingIndex, out string deviceLayoutName, out string controlPath);
+            // On cherche dans le _message toutes les occurences [...] via une Regex
+            string pattern = @"\[(.*?)\]";
 
-            // Replace RMB by right click
-            // displayString = displayString.Replace("RMB", "Right Mouse Button");
+            Debug.Log("Before : " + _message);
 
-            // On remplace le texte de tutoriel par le bon [ACTIVATE] devient activateKey
-            string textToDisplay = _message.Replace("[ACTIVATE]", "[" + displayString + "]");
+            foreach (Match match in Regex.Matches(_message, pattern, RegexOptions.IgnoreCase))
+            {
+                Debug.Log("Match found : " + match.Value.Replace("[", "").Replace("]", ""));
+                InputAction action = GameManager.Instance.Player._playerInput.actions.FindAction(match.Value.Replace("[", "").Replace("]", ""));
 
-            _message = textToDisplay;
+                if (action == null)
+                {
+                    Debug.LogError("Action " + match.Value.Replace("[", "").Replace("]", "") + " not found !");
+                    continue;
+                }
 
-            GameManager.Instance._playerController._playerAnimator.SetBool("isRunning", false);
+                StringBuilder bindingsString = new StringBuilder();
+                ArrayList bindingForAction = new ArrayList();
+
+                foreach (var binding in action.bindings)
+                {
+                    if (binding.groups.Contains(device))
+                    {
+                        bindingForAction.Add(binding);
+                    }
+                }
+
+                for (int i = 0; i < bindingForAction.Count; i++)
+                {
+                    InputBinding binding = (InputBinding)bindingForAction[i];
+                    bindingsString.Append("[");
+                    // On récupère le nom de la touche
+                    if (binding.isPartOfComposite)
+                    {
+                        // On récupère le nom du composite
+                        string compositeName = binding.ToDisplayString(InputBinding.DisplayStringOptions.DontUseShortDisplayNames);
+                        bindingsString.Append(compositeName);
+                    }
+                    else
+                    {
+                        // On récupère le nom de la touche
+                        string compositeName = binding.ToDisplayString(InputBinding.DisplayStringOptions.DontUseShortDisplayNames);
+                        bindingsString.Append(compositeName);
+                    }
+                    bindingsString.Append("]");
+
+                    if (i < bindingForAction.Count - 1)
+                    {
+                        bindingsString.Append(" / ");
+                    }
+                }
+
+                var displayString = bindingsString.ToString();
+
+                // On met le texte en italique
+                displayString = "<i>" + displayString + "</i>";
+
+                _message = _message.Replace(match.Value, displayString);
+            }
+
+            Debug.Log("After : " + _message);
+
+            GameManager.Instance.Player.GetAnimator().SetBool("isRunning", false);
 
             StartCoroutine(ShowDialog());
         }
@@ -92,7 +145,7 @@ public class DialogBox : MonoBehaviour
             _panelActivated = false;
 
             // On réactive le joueur
-            GameManager.Instance._playerInput.SwitchCurrentActionMap("Player");
+            GameManager.Instance.Player._playerInput.SwitchCurrentActionMap("Player");
 
             if (_freezeTime)
             {
@@ -131,6 +184,32 @@ public class DialogBox : MonoBehaviour
             {
                 _audioSource.volume = 0;
             }
+            // Si c'est le début d'une balise, on veut savoir ce que c'est pour ne pas l'afficher
+            else if (_message[currentIndex].Equals("<"))
+            {
+                // On cherche la fin de la balise
+                int endTagIndex = _message.IndexOf(">", currentIndex);
+
+                // On récupère la balise
+                string tag = _message.Substring(currentIndex, endTagIndex - currentIndex + 1);
+
+                // On cherche si c'est une balise de fin
+                if (tag.Contains("</"))
+                {
+                    // On cherche la balise de début
+                    int startTagIndex = _message.LastIndexOf("<", currentIndex);
+
+                    // On récupère la balise
+                    string startTag = _message.Substring(startTagIndex, currentIndex - startTagIndex + 1);
+
+                    // On cherche si c'est une balise de fin
+                    if (startTag.Contains("<i>"))
+                    {
+                        _audioSource.volume = 1;
+                    }
+                }
+            }
+
             _currentText += _message[currentIndex];
             _textMeshPro.text = _currentText;
 

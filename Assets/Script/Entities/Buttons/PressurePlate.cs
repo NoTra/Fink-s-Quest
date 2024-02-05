@@ -7,10 +7,10 @@ public class PressurePlate : Activable
     MeshRenderer _meshRenderer;
 
     Material _emitterMaterial;
-    [SerializeField] float _emitterIntensityOff = 0f;
+    [SerializeField] float _emitterIntensityOff = -10f;
     [SerializeField] float _emitterIntensityOn = 10f;
     [SerializeField] float _transitionSpeed = 0.5f;
-    [SerializeField] Color _startEmissionColor;
+    Color _startEmissionColor;
 
     private AudioSource _audioSource;
 
@@ -18,13 +18,14 @@ public class PressurePlate : Activable
     private Coroutine _dimmDownCoroutine;
 
 
-    private void Awake()
+    private void Start()
     {
-        Debug.Log("Button awaking...");
         _meshRenderer = GetComponent<MeshRenderer>();
         _emitterMaterial = _meshRenderer.materials[1];
 
         Material[] materials = _meshRenderer.materials;
+        _startEmissionColor = materials[1].GetColor("_EmissionColor");
+
         materials[1].SetColor("_EmissionColor", _startEmissionColor * _emitterIntensityOff);
 
         _audioSource = GetComponent<AudioSource>();
@@ -64,19 +65,6 @@ public class PressurePlate : Activable
         Debug.Log("DimmUp");
         float elapsedTime = 0f;
 
-        if (GameManager.Instance._playerController._player._drive != Player.Drive.SOUL) {
-            // On lance le son de pression de bouton
-            if (GameManager.Instance._audioManager._pressurePlatePressedSound != null)
-            {
-                _audioSource.PlayOneShot(GameManager.Instance._audioManager._pressurePlatePressedSound);
-
-                if (GameManager.Instance._audioManager._pressurePlatePressedSound != null)
-                {
-                    _audioSource.PlayOneShot(GameManager.Instance._audioManager._switchButtonSound);
-                }
-            }
-        }
-
         while (elapsedTime < _transitionSpeed)
         {
             float intensity = Mathf.Lerp(_emitterIntensityOff, _emitterIntensityOn, (elapsedTime / _transitionSpeed));
@@ -84,8 +72,6 @@ public class PressurePlate : Activable
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-
-        _dimmUpCoroutine = null;
     }
 
     IEnumerator DimmDown()
@@ -100,8 +86,6 @@ public class PressurePlate : Activable
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-
-        _dimmDownCoroutine = null;
     }
 
     new public void Deactivate()
@@ -119,20 +103,9 @@ public class PressurePlate : Activable
         _dimmDownCoroutine = StartCoroutine(DimmDown());
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Trigger enter on pressure plate");
         Activate();
     }
 
@@ -146,6 +119,14 @@ public class PressurePlate : Activable
 
     private void OnTriggerExit(Collider other)
     {
+        Debug.Log("Trigger exit");
+        // Check if something is still intersect with BoxCollider
+        if (Physics.CheckBox(transform.position, transform.localScale / 2f, transform.rotation, LayerMask.GetMask("Player", "Soul", "Grabbable")))
+        {
+            Debug.Log("Something is still on the button");
+            return;
+        }
+
         Deactivate();
     }
 }

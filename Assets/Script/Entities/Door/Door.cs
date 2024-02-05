@@ -40,6 +40,12 @@ public class Door : Openable
             // Play sound doorOpen
             _audioSource.PlayOneShot(GameManager.Instance._audioManager._openDoorSound);
             _previousOpenState = _isOpen;
+
+            // On cherche tous les Thrower de la salle et on les désactive
+            foreach (Thrower thrower in GameManager.Instance._currentRoom.GetComponentsInChildren<Thrower>())
+            {
+                thrower.isActivated = false;
+            }
         }
         else
         {

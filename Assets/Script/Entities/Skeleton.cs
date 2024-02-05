@@ -11,8 +11,11 @@ public class Skeleton : MonoBehaviour
     private Striker _strikeBehavior;
     private Hittable _hittable;
     [SerializeField] private Animator _animator;
+    private GameObject _skeletonRoom;
 
     private Rigidbody _player;
+    [SerializeField] private float _timeBetweenStrikes = 1f;
+    private float _timeSinceLastStrike = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +26,10 @@ public class Skeleton : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
 
-        _player = GameManager.Instance._playerController._playerRigidbody;
+        _player = GameManager.Instance.Player.GetRigidbody();
+        _skeletonRoom = GetComponentInParent<Room>().gameObject;
+
+        _timeSinceLastStrike = Time.time;
     }
 
     // Update is called once per frame
@@ -32,32 +38,38 @@ public class Skeleton : MonoBehaviour
         // Distance between player and skeleton
         float distance = Vector3.Distance(transform.position, _player.transform.position);
 
-        // Skeleton va vers le joueur s'il est à une certain distance de lui
-        if (distance < 3f)
+        // Skeleton va vers le joueur s'il est dans la même pièce que lui
+        if (_skeletonRoom == GameManager.Instance._currentRoom)// (distance < 3f)
         {
             _navMeshAgent.SetDestination(_player.transform.position);
-            Debug.Log("Set destination to player + isWalking = true");
             _animator.SetBool("isWalking", true);
+
+            Debug.DrawRay(transform.position, transform.forward * 0.2f, Color.red);
+
+            float elapsedTime = Time.time - _timeSinceLastStrike;
+
+            // Chaque seconde on frappe
+            if (elapsedTime > _timeBetweenStrikes)
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, transform.forward, out hit, _strikeBehavior._strikeRange, ~_strikeBehavior._layerToExclude))
+                {
+                    if (hit.collider.CompareTag(_strikeBehavior._targetTag))
+                    {
+                        _strikeBehavior.Strike();
+
+                        _timeSinceLastStrike = Time.time;
+                    }
+                }
+            }
         } else
         {
             _navMeshAgent.SetDestination(transform.position);
             _animator.SetBool("isWalking", false);
         }
 
-        Debug.DrawRay(transform.position, transform.forward * 0.2f, Color.red);
-        // Si le joueur est à distance de frappe et que la cible est la target
-        if (Vector3.Distance(transform.position, _player.transform.position) < _strikeBehavior._strikeRange)
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.forward, out hit, _strikeBehavior._strikeRange, ~_strikeBehavior._layerToExclude))
-            {
-                if (hit.collider.CompareTag(_strikeBehavior._targetTag))
-                {
-                    _strikeBehavior.Strike();
-                }
-            }
-        }
-
+        
+        
         /*if (!_hittable._isHit)
         {
             

@@ -36,7 +36,7 @@ public class Visibility : MonoBehaviour
 
     private void SwitchVisibility()
     {
-        if (GameManager.Instance._playerController._player._drive == Player.Drive.SOUL)
+        if (GameManager.Instance.Player.GetDrive() == Player.Drive.SOUL)
         {
             Debug.Log("player is soul !");
             if (isVisibleForSoul)

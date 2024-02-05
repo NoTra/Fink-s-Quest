@@ -6,28 +6,22 @@ using UnityEngine.Rendering;
 
 public class VolumeSwitcher : MonoBehaviour
 {
-    [SerializeField] private Volume _soulVolume;
-    [SerializeField] private Volume _bodyVolume;
+    private Volume _volume;
+    [SerializeField] private VolumeProfile _soulVolume;
+    [SerializeField] private VolumeProfile _bodyVolume;
 
     private void Awake()
     {
-        // GameManager.Instance._playerController.OnSwitchDriveEvent += OnSwitchDrive;
+        _volume = GetComponent<Volume>();
+        _volume.profile = _bodyVolume;
 
-        _bodyVolume.enabled = true;
-        _soulVolume.enabled = false;
+        // Add an event handler for the drive switch event.
+        PlayerSwitchDrive.OnSwitchDriveEvent += SwitchVolume;
     }
 
-    private void OnSwitchDrive()
+    public void SwitchVolume()
     {
-        if (GameManager.Instance._playerController._player._drive == Player.Drive.SOUL)
-        {
-            _soulVolume.enabled = true;
-            _bodyVolume.enabled = false;
-        }
-        else
-        {
-            _soulVolume.enabled = false;
-            _bodyVolume.enabled = true;
-        }
+        Debug.Log("SwitchVolume (volumeSwitcher)... ");
+        _volume.profile = (GameManager.Instance.Player.GetDrive() == Player.Drive.SOUL) ? _soulVolume : _bodyVolume;
     }
 }

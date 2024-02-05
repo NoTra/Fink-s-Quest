@@ -9,9 +9,6 @@ public class PlayerEffects : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioManager _audioManager;
 
-    [SerializeField] float _stepSoundCooldown = 0.1f;
-    bool _canStepSound = true;
-
     public void Awake()
     {
     }
@@ -19,7 +16,7 @@ public class PlayerEffects : MonoBehaviour
     IEnumerator Step()
     {
         // Si le joueur est en mode SOUL, on ne fait rien
-        if (GameManager.Instance._playerController._player._drive == Player.Drive.SOUL)
+        if (GameManager.Instance.Player.GetDrive() == Player.Drive.SOUL)
         {
             yield break;
         }
@@ -35,24 +32,7 @@ public class PlayerEffects : MonoBehaviour
         // On met le stepPoof à la racine de la scène
         stepPoof.transform.SetParent(null);
 
-        yield return StartCoroutine(StepSound());
-    }
-
-    IEnumerator StepSound()
-    {
-        if (_canStepSound == false)
-        {
-            yield break;
-        }
-
-        _canStepSound = false;
-        if (GameManager.Instance._audioManager._stepSound != null)
-        {
-            _audioSource.PlayOneShot(GameManager.Instance._audioManager._stepSound);
-        }
-        
-        yield return new WaitForSeconds(_stepSoundCooldown);
-        _canStepSound = true;
+        _audioSource.PlayOneShot(GameManager.Instance._audioManager._stepSound);
     }
 
     IEnumerator SwordTrail()

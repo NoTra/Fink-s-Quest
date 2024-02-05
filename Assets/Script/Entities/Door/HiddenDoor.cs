@@ -33,9 +33,9 @@ public class HiddenDoor : Openable
 
     public IEnumerator OpenDoor()
     {
-        GameManager.Instance._playerController._playerRigidbody.velocity = Vector3.zero;
-        GameManager.Instance._playerController._canGrab = false;
-        GameManager.Instance._playerController._canMove = false;
+        GameManager.Instance.Player.GetRigidbody().velocity = Vector3.zero;
+        GameManager.Instance.Player._canGrab = false;
+        GameManager.Instance.Player._canMove = false;
 
         CameraMovement cameraMovement = Camera.main.GetComponent<CameraMovement>();
         cameraMovement._freeMove = true;
@@ -57,7 +57,7 @@ public class HiddenDoor : Openable
         Vector3 start = transform.position;
         Vector3 end = transform.position + new Vector3(0, -1.5f, 0);
 
-        Vector3 playerPosition = GameManager.Instance._playerController._playerRigidbody.position;
+        Vector3 playerPosition = GameManager.Instance.Player.GetRigidbody().position;
 
         while (elapsedTime < _transitionSpeed)
         {
@@ -74,9 +74,8 @@ public class HiddenDoor : Openable
         // We go back to previous position
         yield return StartCoroutine(cameraMovement.MoveCameraToLocation(currentPosition));
 
-        GameManager.Instance._playerController._canGrab = true;
-        GameManager.Instance._playerController._canMove = true;
-
+        GameManager.Instance.Player._canGrab = true;
+        GameManager.Instance.Player._canMove = true;
         cameraMovement._freeMove = false;
     }
 }

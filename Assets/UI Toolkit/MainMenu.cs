@@ -8,14 +8,14 @@ using System;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
-
+using System.Runtime.CompilerServices;
 
 public class MainMenu : MonoBehaviour
 {
     int _minVolume = -35;
     int _maxVolume = 0;
 
-    private VisualElement _root;
+    public VisualElement _root;
 
     private Button _newGame;
     private Button _settings;
@@ -43,6 +43,9 @@ public class MainMenu : MonoBehaviour
     private SliderInt _soundVolumeSlider;
     private int _soundVolume;
 
+    private SliderInt _interfaceVolumeSlider;
+    private int _interfaceVolume;
+
     // Resolutions Choices
     [SerializeField] private List<string> _resolutions = new List<string> { "1920x1080", "1280x720", "800x600" };
 
@@ -54,15 +57,15 @@ public class MainMenu : MonoBehaviour
 
     public static string[] panels = { "MainPanel", "SettingsPanel" };
 
-    string _currentPanel = "MainPanel";
+    public string _currentPanel = "MainPanel";
 
-    string _currentTab = "";
+    public string _currentTab = "";
 
     private AudioSource _uiAudio;
 
-    private VisualElement _focusedElement;
+    public Focusable _currentFocusedElement;
 
-    Focusable _currentFocusedElement;
+    [SerializeField] private PauseMenu _pauseMenu;
 
     private void Awake()
     {
@@ -72,44 +75,17 @@ public class MainMenu : MonoBehaviour
             _playerController._playerInput.SwitchCurrentActionMap("UI");
         }
         
-        Debug.Log("On switch sur le map UI");
         _root = GetComponent<UIDocument>().rootVisualElement;
-        _currentFocusedElement = _root.focusController.focusedElement;
-    }
 
-    private void Update()
-    {
-        if (_currentFocusedElement != _root.focusController.focusedElement)
+        if (_pauseMenu == null)
         {
-            _currentFocusedElement = _root.focusController.focusedElement;
-            Debug.Log("Focused element changed");
-
-            if (_currentFocusedElement is VisualElement visualElement)
-            {
-                // On remove la classe active de tous les elements ayant la classe .tab
-                foreach (VisualElement tab in _root.Query<VisualElement>().Where(t => t.ClassListContains("menu-li")).ToList())
-                {
-                    tab.RemoveFromClassList("active");
-                }
-
-                // On ajoute la classe active à l'element parent de l'element focus
-                visualElement.parent.AddToClassList("active");
-                return;
-            }
-
+            _pauseMenu = GetComponent<PauseMenu>();
         }
-    }
 
-    private void OnEnable()
-    {
         _uiAudio = GetComponent<AudioSource>();
         _root = GetComponent<UIDocument>().rootVisualElement;
 
         _newGame = _root.Q<Button>("ButtonNewGame");
-        // Focus on new game button
-        // _newGame.parent.AddToClassList("active");
-        _newGame.Focus();
-
         _settings = _root.Q<Button>("ButtonSettings");
         _back = _root.Q<Button>("ButtonBack");
         _image = _root.Q<Button>("ButtonImage");
@@ -118,9 +94,12 @@ public class MainMenu : MonoBehaviour
         _exit = _root.Q<Button>("ButtonExit");
         _fondu = _root.Q<VisualElement>("fondu");
 
+        // Get _fondu markup attribute data-value
+
         _masterVolumeSlider = _root.Q<SliderInt>("MasterVolume");
         _musicVolumeSlider = _root.Q<SliderInt>("MusicVolume");
         _soundVolumeSlider = _root.Q<SliderInt>("SoundVolume");
+        _interfaceVolumeSlider = _root.Q<SliderInt>("InterfaceVolume");
 
         if (_fondu != null)
         {
@@ -134,24 +113,87 @@ public class MainMenu : MonoBehaviour
 
         BindForm();
 
-        PrepareEvents();
+        _currentFocusedElement = _root.focusController.focusedElement;
     }
 
-    private void PrepareEvents()
+    private void Update()
+    {
+        if (_root.focusController.focusedElement != null && _currentFocusedElement != _root.focusController.focusedElement)
+        {
+            _currentFocusedElement = _root.focusController.focusedElement;
+            Debug.Log("Focused element changed : " + _currentFocusedElement.ToString());
+
+            if (_currentFocusedElement is VisualElement visualElement)
+            {
+                // On remove la classe active de tous les elements ayant la classe .tab
+                foreach (VisualElement tab in _root.Query<VisualElement>().Where(t => t.ClassListContains("menu-li")).ToList())
+                {
+                    tab.RemoveFromClassList("active");
+                }
+
+                // On ajoute la classe active à l'element parent de l'element focus
+                visualElement.AddToClassList("active");
+                return;
+            }
+        }
+
+        if (_currentFocusedElement != null)
+        {
+            _currentFocusedElement.Focus();
+        }
+    }
+
+    private void OnEnable()
     {
         _newGame.clicked += () => {
+            Debug.Log("New Game clicked");
             _uiAudio.PlayOneShot(_uiAudio.clip);
+
+            // On remet le temps à 1 (à 0 si le jeu est en pause)
+            if (GameManager.Instance.paused)
+            {
+                _pauseMenu.OnResume();
+            }
 
             StartCoroutine(LoadSceneWithTransition("DUNGEON"));
         };
 
         _settings.clicked += () =>
         {
+            Debug.Log("Settings clicked");
             LoadPanel("SettingsPanel");
         };
-        _back.clicked += () => LoadPanel("MainPanel");
-        _image.clicked += () => LoadTab("ImageTab");
-        _sound.clicked += () => LoadTab("SoundTab");
+
+        _back.clicked += () =>
+        {
+            Debug.Log("Back clicked");
+            LoadPanel("MainPanel");
+        };
+
+        _image.clicked += () =>
+        {
+            Debug.Log("Image clicked");
+
+            if (_image.viewDataKey == null)
+            {
+                return;
+            }
+            
+            LoadTab(_image.viewDataKey);
+        };
+
+        _sound.clicked += () =>
+        {
+            Debug.Log("Sound clicked");
+
+            if (_sound.viewDataKey == null)
+            {
+                return;
+            }
+            LoadTab(_sound.viewDataKey);
+            // LoadTab("SoundTab");
+        };
+
         _shortcuts.clicked += () => LoadTab("ShortcutsTab");
 
         _exit.clicked += ExitGame;
@@ -185,6 +227,88 @@ public class MainMenu : MonoBehaviour
             // Change sound volume
             _audioMixer.SetFloat("Master/SoundVolume", ConvertSliderValueToReal(_soundVolume));
         });
+        _interfaceVolumeSlider.RegisterValueChangedCallback((evt) =>
+        {
+            _interfaceVolume = (int)evt.newValue;
+            // Change sound volume
+            _audioMixer.SetFloat("Master/InterfaceVolume", ConvertSliderValueToReal(_interfaceVolume));
+        });
+    }
+
+    private void OnDisable()
+    {
+        _newGame.clicked -= () =>
+        {
+            Debug.Log("New Game clicked");
+            _uiAudio.PlayOneShot(_uiAudio.clip);
+
+            // On remet le temps à 1 (à 0 si le jeu est en pause)
+            if (GameManager.Instance.paused)
+            {
+                _pauseMenu.OnResume();
+            }
+
+            StartCoroutine(LoadSceneWithTransition("DUNGEON"));
+        };
+
+        _settings.clicked -= () =>
+        {
+            Debug.Log("Settings clicked");
+            LoadPanel("SettingsPanel");
+        };
+        _back.clicked -= () =>
+        {
+            Debug.Log("Back clicked");
+            LoadPanel("MainPanel");
+        };
+        _image.clicked -= () =>
+        {
+            Debug.Log("Image clicked");
+            LoadTab("ImageTab");
+        };
+        _sound.clicked -= () => LoadTab("SoundTab");
+        _shortcuts.clicked -= () => LoadTab("ShortcutsTab");
+
+        _exit.clicked -= ExitGame;
+
+        _fullscreenToggle.UnregisterValueChangedCallback((evt) =>
+        {
+            _fullscreen = evt.newValue;
+            Screen.fullScreen = _fullscreen;
+        });
+
+        _resolutionDropdown.UnregisterValueChangedCallback((evt) =>
+        {
+            _resolution = evt.newValue;
+
+            string[] resolution = _resolution.Split('x');
+            Screen.SetResolution(int.Parse(resolution[0]), int.Parse(resolution[1]), _fullscreen);
+        });
+
+        _masterVolumeSlider.UnregisterValueChangedCallback((evt) =>
+        {
+            _masterVolume = (int)evt.newValue;
+            // Change Group "Master" volume
+            _audioMixer.SetFloat("MasterVolume", ConvertSliderValueToReal(_masterVolume));
+        });
+        _musicVolumeSlider.UnregisterValueChangedCallback((evt) =>
+        {
+            _musicVolume = (int)evt.newValue;
+            // Change music volume
+            _audioMixer.SetFloat("Master/MusicVolume", ConvertSliderValueToReal(_musicVolume));
+        });
+        _soundVolumeSlider.UnregisterValueChangedCallback((evt) =>
+        {
+            _soundVolume = (int)evt.newValue;
+            // Change sound volume
+            _audioMixer.SetFloat("Master/SoundVolume", ConvertSliderValueToReal(_soundVolume));
+        });
+        _interfaceVolumeSlider.UnregisterValueChangedCallback((evt) =>
+        {
+            _interfaceVolume = (int)evt.newValue;
+            // Change sound volume
+            _audioMixer.SetFloat("Master/InterfaceVolume", ConvertSliderValueToReal(_interfaceVolume));
+        });
     }
 
     private void BindForm()
@@ -204,14 +328,12 @@ public class MainMenu : MonoBehaviour
         _masterVolume = GetVolume("Master");
         _musicVolume = GetVolume("Master/Music"); 
         _soundVolume = GetVolume("Master/Sound");
-
-        Debug.Log("MasterVolume: " + _masterVolume);
-        Debug.Log("MusicVolume: " + _musicVolume);
-        Debug.Log("SoundVolume: " + _soundVolume);
+        _soundVolume = GetVolume("Master/Interface");
 
         _masterVolumeSlider.value = ConvertRealValueToSlider(_masterVolume);
         _musicVolumeSlider.value = ConvertRealValueToSlider(_musicVolume);
         _soundVolumeSlider.value = ConvertRealValueToSlider(_soundVolume);
+        _interfaceVolumeSlider.value = ConvertRealValueToSlider(_interfaceVolume);
 
         // Resolutions Choices
         _resolutionDropdown.choices = _resolutions;
@@ -256,7 +378,6 @@ public class MainMenu : MonoBehaviour
 
     private IEnumerator LoadSceneWithTransition(string SceneName)
     {
-        Debug.Log("LoadSceneWithTransition");
         _fondu.AddToClassList("show");
 
         // Wait 1s
@@ -274,14 +395,14 @@ public class MainMenu : MonoBehaviour
     }
 
     public void LoadPanel(string panelName)
-    {
-        Debug.Log("Load Panel launched");
+    {   
         if (_currentPanel != panelName)
         {
+            Debug.Log("Load panel " + panelName);
+
             _uiAudio.PlayOneShot(_uiAudio.clip);
 
             VisualElement root = GetComponent<UIDocument>().rootVisualElement;
-
             VisualElement current = root.Q<VisualElement>(_currentPanel);
             VisualElement next = root.Q<VisualElement>(panelName);
 
@@ -300,6 +421,13 @@ public class MainMenu : MonoBehaviour
             }
 
             _currentTab = "";
+
+            // On met le focus sur le premier parent d'un bouton
+            Button firstOfPanel = next.Q<Button>();
+
+            _currentFocusedElement = firstOfPanel.parent;
+
+            firstOfPanel.parent.Focus();
         }
     }
 
@@ -329,5 +457,45 @@ public class MainMenu : MonoBehaviour
         newTab.AddToClassList("active");
 
         _currentTab = tabName;
+
+        Debug.Log("Opened tab " + tabName);
+
+        // On met le focus sur le premier element focusable child de l'element ayant l'id tabName
+        Focusable firstOfTab = root.Query<VisualElement>(tabName).Children<VisualElement>().First();
+
+        firstOfTab.Focus();
+
+        Debug.Log("Focus sur " + firstOfTab.ToString());
+    }
+
+    public void UnLoadTab()
+    {
+        VisualElement root = GetComponent<UIDocument>().rootVisualElement;
+        VisualElement current = root.Q<VisualElement>(_currentTab);
+
+        if (_currentTab != null && _currentTab != "")
+        {
+            Debug.Log("current tab : " + _currentTab);
+
+            current.RemoveFromClassList("active");
+
+            // On cherche le bouton qui a comme viewDataKey le panelName
+            Button button = root.Query<Button>().Where(b => b.viewDataKey == _currentTab).First();
+
+            // On met le focus sur le bouton
+            button.parent.Focus();
+
+            Debug.Log("Focus sur le parent de " + button.ToString());
+
+            _currentTab = null;
+
+            // On lance le son
+            _uiAudio.PlayOneShot(_uiAudio.clip);
+
+            return;
+        }
+
+        Debug.Log("Pas de tab chargé");
+        return;
     }
 }

@@ -29,29 +29,27 @@
                 "m_VisualTreeAssetBackup": {
                     "instanceID": 0
                 },
-                "m_OpenendVisualTreeAssetOldPath": "Assets/UI Toolkit/PauseMenu.uxml",
+                "m_OpenendVisualTreeAssetOldPath": "Assets/UI Toolkit/MainMenu.uxml",
                 "m_VisualTreeAsset": {
                     "fileID": 9197481963319205126,
-                    "guid": "86cd805981c7b754cbff156ec3ba9653",
+                    "guid": "c0866a1ed0318de4a9c3e8b427c60b17",
                     "type": 3
                 },
                 "m_ActiveStyleSheet": {
-                    "fileID": 7433441132597879392,
-                    "guid": "d7a273113180b5544a92e34a4f0f3bb3",
-                    "type": 3
+                    "instanceID": 0
                 },
                 "m_Settings": {
-                    "UxmlGuid": "86cd805981c7b754cbff156ec3ba9653",
-                    "UxmlPath": "Assets/UI Toolkit/PauseMenu.uxml",
+                    "UxmlGuid": "c0866a1ed0318de4a9c3e8b427c60b17",
+                    "UxmlPath": "Assets/UI Toolkit/MainMenu.uxml",
                     "CanvasX": 0,
                     "CanvasY": 0,
-                    "CanvasWidth": 1346,
-                    "CanvasHeight": 792,
+                    "CanvasWidth": 1920,
+                    "CanvasHeight": 1080,
                     "MatchGameView": false,
-                    "ZoomScale": 1.0,
+                    "ZoomScale": 0.3499999940395355,
                     "PanOffset": {
-                        "x": 228.5,
-                        "y": 209.5
+                        "x": 126.0803451538086,
+                        "y": 161.66815185546876
                     },
                     "ColorModeBackgroundOpacity": 1.0,
                     "ImageModeCanvasBackgroundOpacity": 1.0,
@@ -62,7 +60,7 @@
                         "r": 0.0,
                         "g": 0.0,
                         "b": 0.0,
-                        "a": 1.0
+                        "a": 0.08627451211214066
                     },
                     "CanvasBackgroundImage": {
                         "instanceID": 0

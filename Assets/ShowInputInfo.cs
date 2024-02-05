@@ -4,14 +4,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class ShowInputInfo : MonoBehaviour
 {
     [SerializeField] private PlayerInput _playerInput;
 
+    [SerializeField] private MainMenu _mainMenu;
+
     [SerializeField] private TextMeshProUGUI _map;
     [SerializeField] private TextMeshProUGUI _device;
     [SerializeField] private TextMeshProUGUI _debugInput;
+    [SerializeField] private TextMeshProUGUI _UIfocus;
 
 
     private void Awake()
@@ -38,6 +42,44 @@ public class ShowInputInfo : MonoBehaviour
         {
             Vector2 moveDirection = _playerInput.actions["Move"].ReadValue<Vector2>();
             _debugInput.text = moveDirection.ToString();
+        }
+
+        if (_UIfocus != null)
+        {
+            VisualElement focusedElement = GameManager.Instance._currentUIDocument.rootVisualElement.focusController.focusedElement as VisualElement;
+
+            if (focusedElement != null)
+            {
+                if (focusedElement.Q<Button>() != null)
+                {
+                    _UIfocus.text = focusedElement.Q<Button>().name;
+                }
+                else if (focusedElement.Q<SliderInt>() != null)
+                {
+                    _UIfocus.text = "SliderInt : " + focusedElement.Q<SliderInt>().name;
+                }
+                else if (focusedElement.Q<Slider>() != null)
+                {
+                    _UIfocus.text = "Slider : " + focusedElement.Q<Slider>().name;
+                } else if (focusedElement.Q<Toggle>() != null)
+                {
+                    _UIfocus.text = "Toggle : " + focusedElement.Q<Toggle>().name;
+                }
+                else if (focusedElement.Q<DropdownField>() != null)
+                {
+                    _UIfocus.text = "DropdownField : " + focusedElement.Q<DropdownField>().name;
+                }
+                else
+                {
+                    _UIfocus.text = "NaN";
+                }
+            } else
+            {
+                _UIfocus.text = "NaN";
+            }
+
+            // On passe sur la navigation standard si on a plus de focus sinon, on reste sur la navigation UI
+            GameManager.Instance._eventSystem.sendNavigationEvents = (_UIfocus.text == "NaN");
         }
     }
 }

@@ -9,20 +9,22 @@ public class Thrower : MonoBehaviour
     [SerializeField] private float _throwStrength = 5f;
     [SerializeField] private float _timeBetweenThrows = 1f;
     [SerializeField] private float _damage = 1f;
+    public bool isActivated = true;
+    private Room _currentRoom;
 
     private float _lastThrowTime;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        _currentRoom = GetComponentInParent<Room>();
     }
 
     // Update is called once per frame
     void Update()
     {
         // Every _timeBetweenThrows seconds, launch ThrowProjectile
-        if (Time.time - _lastThrowTime > _timeBetweenThrows)
+        if (_currentRoom == GameManager.Instance._currentRoom && isActivated && Time.time - _lastThrowTime > _timeBetweenThrows)
         {
             _lastThrowTime = Time.time;
             ThrowProjectile();

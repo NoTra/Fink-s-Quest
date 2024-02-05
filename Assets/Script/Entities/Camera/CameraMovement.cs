@@ -9,32 +9,18 @@ public class CameraMovement : MonoBehaviour
 
     private Bounds _roomBounds;
 
-    private Vector2 _topLeftCoordinate;
-    private Vector2 _topRightCoordinate;
-    private Vector2 _bottomLeftCoordinate;
-    private Vector2 _bottomRightCoordinate;
-
-    private float _XRightDiff;
-    private float _ZBottomDiff;
-    private float _XLeftDiff;
-    private float _ZTopDiff;
-
     public float _cameraMinX;
     public float _cameraMaxX;
     public float _cameraMinZ;
     public float _cameraMaxZ;
 
-    private float _cameraZOffset = 0f;
+    private float _cameraZOffset = 1f;
 
     [SerializeField] private float _cameraZOffsetForward;
     [SerializeField] private float _cameraZOffsetIdle;
     [SerializeField] private float _cameraZOffsetBackward;
 
-    private float _lastZVelocity = 0;
-    private float _lastVelocityChange = 0;
-    private float _direction = 0;
-    [SerializeField] private PlayerController _playerController;
-    private bool _cameraMoving = false;
+    [SerializeField] private Room _currentRoom;
 
     public bool _freeMove = false;
 
@@ -44,21 +30,40 @@ public class CameraMovement : MonoBehaviour
     void Start()
     {
         _camera = GetComponent<Camera>();
+        _currentRoom = GameManager.Instance._currentRoom.GetComponent<Room>();
         _roomBounds = GetMaxBounds(GameManager.Instance._currentRoom);
 
         Init();
     }
 
-    private void CalculateCoordinatesDeviations()
+    public void Init()
     {
+        Debug.Log("Init Camera Movement...");
+        _currentRoom = GameManager.Instance._currentRoom.GetComponent<Room>();
+
+        _roomBounds = GetMaxBounds(GameManager.Instance._currentRoom);
+
+        SetDeviationsCoordinates();
+    }
+
+    private void SetDeviationsCoordinates()
+    {
+        Debug.Log("Calculating coordinates deviations...");
         Debug.Log("Max zoom camera : " + _cameraY);
+
+        _cameraY = _currentRoom._maxZoom;
 
         // On setup la camera sur le joueur
         transform.position = new Vector3(
-            _playerController._playerRigidbody.transform.position.x,
+            GameManager.Instance.Player.GetRigidbody().transform.position.x,
             _cameraY,
-            _playerController._playerRigidbody.transform.position.z
+            GameManager.Instance.Player.GetRigidbody().transform.position.z
         );
+
+        var _topLeftCoordinate = new Vector2();
+        var _topRightCoordinate = new Vector2();
+        // var _bottomLeftCoordinate = new Vector2();
+        // var _bottomRightCoordinate = new Vector2();
 
         Debug.Log("On tire les raycasts");
         // On trace un Raycast depuis le centre de la camera vers le haut gauche de l'écran en World Space et on récupère le point d'impact sur le Layer Ground
@@ -66,56 +71,39 @@ public class CameraMovement : MonoBehaviour
         Ray ray = _camera.ScreenPointToRay(new Vector3(0, Screen.height, 0));
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
         {
-            Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.yellow, 20f);
+            // Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.yellow, 20f);
             _topLeftCoordinate = new Vector2(hit.point.x, hit.point.z);
         }
 
         // On trace un Raycast depuis le centre de la camera vers le bas gauche de l'écran en World Space et on récupère le point d'impact sur le Layer Ground
-        ray = _camera.ScreenPointToRay(new Vector3(0, 0, 0));
+        /*ray = _camera.ScreenPointToRay(new Vector3(0, 0, 0));
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
         {
-            Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.blue, 20f);
+            // Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.blue, 20f);
             _bottomLeftCoordinate = new Vector2(hit.point.x, hit.point.z);
-        }
+        }*/
 
         // On trace un Raycast depuis le centre de la camera vers le haut droit de l'écran en World Space et on récupère le point d'impact sur le Layer Ground
         ray = _camera.ScreenPointToRay(new Vector3(Screen.width, Screen.height, 0));
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
         {
-            Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red, 20f);
+            // Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red, 20f);
             _topRightCoordinate = new Vector2(hit.point.x, hit.point.z);
         }
 
-        // On trace un Raycast depuis le centre de la camera vers le bas droit de l'écran en World Space et on récupère le point d'impact sur le Layer Ground
+        /*// On trace un Raycast depuis le centre de la camera vers le bas droit de l'écran en World Space et on récupère le point d'impact sur le Layer Ground
         ray = _camera.ScreenPointToRay(new Vector3(Screen.width, 0, 0));
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
         {
-            Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green, 20f);
+            // Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green, 20f);
             _bottomRightCoordinate = new Vector2(hit.point.x, hit.point.z);
-        }
+        }*/
 
-        Debug.Log("On définit les décalages de coordonnées par rapport au joueur : ");
-        Debug.Log("TopLEFT : " + _topLeftCoordinate);
-        Debug.Log("TopRIGHT : " + _topRightCoordinate);
-        Debug.Log("BottomLEFT : " + _bottomLeftCoordinate);
-        Debug.Log("BottomRIGHT : " + _bottomRightCoordinate);
-
-        Debug.Log("Position de la camera : " + _camera.transform.position);
-
-        _XRightDiff = _topRightCoordinate.x - _camera.transform.position.x;
-        _ZBottomDiff = _camera.transform.position.z - _bottomRightCoordinate.y;
-        _XLeftDiff = _camera.transform.position.x - _topLeftCoordinate.x;
-        _ZTopDiff = _topLeftCoordinate.y - _camera.transform.position.z;
-
-        float xRightMax = (_roomBounds.max.x - _XRightDiff);
-        float xLeftMax = (_roomBounds.min.x + _XLeftDiff);
-        _cameraMinX = xLeftMax;
-        _cameraMaxX = xRightMax;
-
-        float zTopMax = (_roomBounds.max.z - _ZTopDiff);
-        float zBottomMax = (_roomBounds.min.z + _ZBottomDiff);
-        _cameraMinZ = zBottomMax;
-        _cameraMaxZ = zTopMax;
+        _cameraMinX = _roomBounds.min.x + (_camera.transform.position.x - _topLeftCoordinate.x);
+        _cameraMaxX = _roomBounds.max.x - (_topRightCoordinate.x - _camera.transform.position.x);
+        // _cameraMinZ = _roomBounds.min.z + (_camera.transform.position.z - _bottomRightCoordinate.y);
+        _cameraMinZ = _roomBounds.min.z + (_camera.transform.position.z - _topRightCoordinate.y);
+        _cameraMaxZ = _roomBounds.max.z - (_topLeftCoordinate.y - _camera.transform.position.z);
     }
 
     Bounds GetMaxBounds(GameObject g)
@@ -130,46 +118,27 @@ public class CameraMovement : MonoBehaviour
         return b;
     }
 
-    public void Init()
-    {
-        Room currentRoom = GameManager.Instance._currentRoom.GetComponent<Room>();
-        _cameraY = currentRoom._maxZoom;
-
-        _cameraMinX = currentRoom._cameraMinX;
-        _cameraMaxX = currentRoom._cameraMaxX;
-        _cameraMinZ = currentRoom._cameraMinZ;
-        _cameraMaxZ = currentRoom._cameraMaxZ;
-
-        // CalculateCoordinatesDeviations();
-    }
-
     private void Update()
     {
     }
 
-    public Vector3 GetConstrainedCameraPosition(Vector3 positionWanted, Room room = null)
+    public Vector3 GetConstrainedCameraPosition(Vector3 positionWanted)
     {
-        float cameraMinX = room != null ? room._cameraMinX : _cameraMinX;
-        float cameraMaxX = room != null ? room._cameraMaxX : _cameraMaxX;
-        float cameraMinZ = room != null ? room._cameraMinZ : _cameraMinZ;
-        float cameraMaxZ = room != null ? room._cameraMaxZ : _cameraMaxZ;
-        float cameraY = room != null ? room._maxZoom : _cameraY;
-
         float clampX = Mathf.Clamp(
             positionWanted.x,
-            cameraMinX,
-            cameraMaxX
+            _cameraMinX - 1,
+            _cameraMaxX + 1
         );
 
         float clampZ = Mathf.Clamp(
             positionWanted.z,
-            cameraMinZ,
-            cameraMaxZ
+            _cameraMinZ - 0.5f,
+            _cameraMaxZ + 0.5f 
         );
 
         return new Vector3(
             clampX,
-            cameraY,
+            _cameraY,
             clampZ
         );
     }
@@ -179,70 +148,21 @@ public class CameraMovement : MonoBehaviour
     {
         if (_freeMove)
         {
+            //Debug.Log("Camera is free...");
             return;
         }
-        /*_direction = Mathf.Sign(_playerController._playerRigidbody.velocity.z);
 
-        if (_direction != _lastZVelocity)
-        {
-            _lastZVelocity = _direction;
-            _lastVelocityChange = Time.time;
-        }
+        /*_camera.transform.position = new Vector3(
+            GameManager.Instance.Player.GetRigidbody().transform.position.x,
+            5,
+            GameManager.Instance.Player.GetRigidbody().transform.position.z - _cameraZOffset
+        );*/
 
-        if (Time.time - _lastVelocityChange > 1f && _lastVelocityChange != 0f)
-        {
-            StartCoroutine(ChangePlayerOffset());
-            _lastVelocityChange = 0f;
-            _lastZVelocity = _direction;
-        }
-
-        if (_cameraMoving)
-        {
-            return;
-        }*/
-
-        _camera.transform.position = GetConstrainedCameraPosition(_playerController._playerRigidbody.transform.position);
+        // On clamp les x de la camera entre xLeftMax & xRightMax
+        // On clamp les y de la camera entre yBottomMax & yTopMax
+        // Debug.Log("On centre sur le player... " + GameManager.Instance.Player.GetRigidbody().transform.position);
+        _camera.transform.position = GetConstrainedCameraPosition(GameManager.Instance.Player.GetRigidbody().transform.position);
     }
-    
-    /*IEnumerator ChangePlayerOffset()
-    {
-        _cameraMoving = true;
-        Debug.Log("ChangePlayerOffset called !");
-
-        float currentOffset = _cameraZOffset;
-        float targetOffset = 0;
-        // Si le joueur va vers le haut, on déplace la position théorique du joueur vers l'arrière afin qu'il voit ce qu'il y a devant lui
-        if (_direction > 0)
-        {
-            targetOffset += _cameraZOffsetForward;
-        } else if (_direction < 0)
-        {
-            targetOffset += _cameraZOffsetBackward;
-        } else
-        {
-            targetOffset += _cameraZOffsetIdle;
-        }
-
-        float elapsedTime = 0;
-        float duration = 2f;
-
-        Debug.Log("On lerp");
-        while (elapsedTime < duration)
-        {
-            _cameraZOffset = Mathf.Lerp(currentOffset, targetOffset, (elapsedTime / duration));
-            
-            float z = _playerController._playerRigidbody.transform.position.z + _cameraZOffset;
-            float maxZ = Mathf.Clamp(z, -26.88f, -1.51367f);
-            _camera.transform.position = new Vector3(_camera.transform.position.x, _camera.transform.position.y, maxZ);
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        _lastVelocityChange = 0f;
-        _cameraZOffset = targetOffset;
-        _cameraMoving = false;
-    }*/
 
     public IEnumerator MoveCameraToLocation(Vector3 location)
     {

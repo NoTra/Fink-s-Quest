@@ -85,6 +85,7 @@ public class Hittable : MonoBehaviour
      */
     public void Hit(Vector3 strikerPosition, float strikerStrength, float damage)
     {
+        Debug.Log("Hit !!!!!!!");
         _isInvincible = true;
 
         _currentHP = Mathf.Max(0f, _currentHP - damage);

@@ -6,10 +6,10 @@ public class PushButton : Activable
 {
     MeshRenderer _meshRenderer;
     Material _emitterMaterial;
-    [SerializeField] float _emitterIntensityOff = 0f;
+    [SerializeField] float _emitterIntensityOff = -10f;
     [SerializeField] float _emitterIntensityOn = 10f;
     [SerializeField] float _transitionSpeed = 0.5f;
-    [SerializeField] Color _startEmissionColor;
+    Color _startEmissionColor;
 
     private Coroutine _dimmUpCoroutine;
     private Coroutine _dimmDownCoroutine;
@@ -24,8 +24,9 @@ public class PushButton : Activable
         _audioSource = GetComponent<AudioSource>();
 
         Material[] materials = _meshRenderer.materials;
-        materials[1].SetColor("_EmissionColor", _startEmissionColor * _emitterIntensityOff);
+        _startEmissionColor = materials[1].GetColor("_EmissionColor");
 
+        materials[1].SetColor("_EmissionColor", _startEmissionColor * _emitterIntensityOff);
 
         _isActive = false;
     }
