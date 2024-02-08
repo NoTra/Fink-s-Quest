@@ -46,8 +46,6 @@ public class Hittable : MonoBehaviour
 
     public IEnumerator FlashRed()
     {
-        Debug.Log("Flash red !!!!!!!");
-
         // Stocker les matériaux d'origine dans une liste
         List<Material> defaultMaterials = new(_renderer.materials);
 

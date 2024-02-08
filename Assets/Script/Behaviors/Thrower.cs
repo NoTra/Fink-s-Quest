@@ -24,7 +24,6 @@ public class Thrower : MonoBehaviour
     {
         _currentRoom = GetComponentInParent<Room>().gameObject;
         _audioSource = GetComponent<AudioSource>();
-        Debug.Log("currentRoom : " + _currentRoom);
 
         _lastThrowTime = Time.time;
     }
@@ -37,8 +36,6 @@ public class Thrower : MonoBehaviour
         {
             _lastThrowTime = Time.time;
             ThrowProjectile();
-
-            Debug.Log("THROW !");
         }
     }
 

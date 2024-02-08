@@ -17,7 +17,6 @@ public class MaskFollowPlayer : MonoBehaviour
 
     public void CenterCircleOnPlayer()
     {
-        Debug.Log("Centering circle on player");
         // Change pivot to player position
         rectTransform.position = Camera.main.WorldToScreenPoint(player.position);
     }

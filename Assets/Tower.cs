@@ -15,12 +15,8 @@ public class Tower : MonoBehaviour
         if (_room != null)
         {
             _room.AddTower(this);
-        } else
-        {
-            Debug.LogError("Tower " + this.name + " has no parent Room");
         }
-            
-
+        
         _thrower = GetComponentInChildren<Thrower>();
     }
 

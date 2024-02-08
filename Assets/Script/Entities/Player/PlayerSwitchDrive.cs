@@ -18,8 +18,6 @@ public class PlayerSwitchDrive : PlayerSystem
             return;
         }
 
-        Debug.Log("Switch drive from PlayerController::OnSwitchDrive (current state : " + Player.GetDrive() + ") t: " + Time.realtimeSinceStartup);
-
         if (Player._drive == Player.Drive.BODY)
         {
             Player.GetAnimator().SetBool("isRunning", false);
@@ -44,7 +42,6 @@ public class PlayerSwitchDrive : PlayerSystem
             // Stopping body movement
             Player.GetRigidbody().velocity = Vector3.zero;
 
-            Debug.Log("On invoke OnSwitchDriveEvent !");
             // On trigger l'event OnSwitchDrive
             OnSwitchDriveEvent?.Invoke();
 
@@ -71,7 +68,6 @@ public class PlayerSwitchDrive : PlayerSystem
 
     IEnumerator JoinSoulToBody()
     {
-        Debug.Log("Join soul to body !");
         // Reduce velocity of player body and soul to zero
         Player.GetRigidbody().velocity = Vector3.zero;
         Player._canMove = false;

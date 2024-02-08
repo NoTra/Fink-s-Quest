@@ -41,7 +41,6 @@ public class PlayerGrab : PlayerSystem
         RaycastHit hit;
         if (Physics.Raycast(origin, transform.forward, out hit, 0.5f, LayerMask.GetMask("Grabbable")))
         {
-            Debug.Log("OnGrab hit " + hit.transform.gameObject.name);
             Player._isGrabbing = true;
             Player._canMove = false;
             Player.GetAnimator().SetBool("isPushing", true);
@@ -54,9 +53,6 @@ public class PlayerGrab : PlayerSystem
             targetPosition = new Vector3(targetPosition.x, transform.position.y, targetPosition.z);
 
             StartCoroutine(MoveTo(targetPosition, 0.2f, -hit.normal));
-        } else
-        {
-            Debug.Log("OnGrab hit nothing");
         }
     }
 
@@ -68,8 +64,6 @@ public class PlayerGrab : PlayerSystem
         }
 
         Player.GetAnimator().SetBool("isPushing", false);
-
-        Debug.Log("OnUngrab");
 
         // On récupère les infos du collider de l'objet
         BoxCollider grabbedBoxCollider = _grabbedGO.GetComponent<BoxCollider>();
@@ -93,7 +87,6 @@ public class PlayerGrab : PlayerSystem
 
     public IEnumerator MoveTo(Vector3 targetPosition, float duration, Vector3 objectPositionToLookAt)
     {
-        Debug.Log("MoveTo");
         float elapsedTime = 0f;
 
         Vector3 from = transform.position;

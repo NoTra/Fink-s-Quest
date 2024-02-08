@@ -60,17 +60,6 @@ public class Projectile : MonoBehaviour
             Debug.Log("Play impact sound");
             AudioSource.PlayClipAtPoint(GameManager.Instance._audioManager._laserImpactSound, transform.position);
 
-            /*GameObject impactParticle = Instantiate(_impactParticle, transform.position, Quaternion.identity);
-            impactParticle.transform.position = transform.position;
-
-            // On déplace la particule d'impact afin qu'elle soit posée sur le mur
-            impactParticle.transform.position = new Vector3(impactParticle.transform.position.x, impactParticle.transform.position.y, impactParticle.transform.position.z);
-
-            var wallNormal = other.transform.forward;
-            // On aligne la rotation de la particule d'impact avec la normale du mur
-            impactParticle.transform.rotation = Quaternion.LookRotation(wallNormal);
-            */
-
             DestroySelf();
         }
     }

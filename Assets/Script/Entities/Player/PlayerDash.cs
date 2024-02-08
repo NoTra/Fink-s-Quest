@@ -16,7 +16,6 @@ public class PlayerDash : PlayerSystem
     {
         if (context.performed && Player.CanDash())
         {
-            Debug.Log("Dash");
             Player._dashCoroutine = StartCoroutine(PerformDash());
         }
     }
@@ -66,7 +65,6 @@ public class PlayerDash : PlayerSystem
             {
                 if (Player.GetDrive() == Player.Drive.BODY)
                 {
-                    Debug.Log("BOOM ! On a dashé dans un mur !");
                     // StartCoroutine(_hittable.FlashRed());
 
                     // Appliquer la vélocité initiale
