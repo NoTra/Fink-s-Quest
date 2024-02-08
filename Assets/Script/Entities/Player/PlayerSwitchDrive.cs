@@ -18,6 +18,11 @@ public class PlayerSwitchDrive : PlayerSystem
             return;
         }
 
+        SwitchDrive();
+    }
+
+    public void SwitchDrive()
+    {
         if (Player._drive == Player.Drive.BODY)
         {
             Player.GetAnimator().SetBool("isRunning", false);
@@ -37,6 +42,7 @@ public class PlayerSwitchDrive : PlayerSystem
                 }
             }
 
+            Debug.Log("Changement de body à soul");
             Player._drive = Player.Drive.SOUL;
 
             // Stopping body movement
@@ -107,6 +113,7 @@ public class PlayerSwitchDrive : PlayerSystem
         yield return StartCoroutine(DimmDownLight());
 
         // On swap finalement
+        Debug.Log("Changement de soul à body");
         Player._drive = Player.Drive.BODY;
         Player._canMove = true;
 

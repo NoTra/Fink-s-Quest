@@ -10,6 +10,9 @@ public class PlayerDash : PlayerSystem
     [SerializeField] private float _timeBetweenDashes = 1f; // Temps entre chaque dash
     private float _lastDashTime = 0f;
 
+    [SerializeField] private GameObject _stepEffect;
+    [SerializeField] private AudioClip _dashSound;
+
     [SerializeField] private TrailRenderer trail;
 
     public void OnDash(InputAction.CallbackContext context)
@@ -53,6 +56,16 @@ public class PlayerDash : PlayerSystem
         else
         {
             destination = Player.GetRigidbody().transform.position + new Vector3(moveDirection.x, 0f, moveDirection.y) * _dashForce;
+        }
+
+        // On instantie un stepPoof
+        var stepEffect = Instantiate(_stepEffect, Player.GetRigidbody().transform.position, Quaternion.identity);
+        Destroy(stepEffect, 2);
+
+        // On lance le son de dash
+        if (_dashSound != null)
+        {
+            GameManager.Instance._audioManager._audioSource.PlayOneShot(_dashSound);
         }
 
         float elapsedTime = 0f;

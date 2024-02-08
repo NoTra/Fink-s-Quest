@@ -9,6 +9,10 @@ public class PlayerMovement : PlayerSystem
         base.Awake();
     }
 
+    private void Start()
+    {
+    }
+
     private void Update()
     {
         // On trace un raycast devant le joueur pour détecter les collisions
@@ -21,7 +25,7 @@ public class PlayerMovement : PlayerSystem
         // On récupère l'input du joueur
         Vector2 moveDirection = Player._playerInput.actions["Move"].ReadValue<Vector2>();
 
-        // On passe à l'animator que la variable velocity = _playerRigidbody.velocity.magnitude
+        // On passe à l'animator que la variable velocity = Player.GetRigidbody().velocity.magnitude
         Player.GetAnimator().SetBool("isRunning", (moveDirection != Vector2.zero));
     }
 

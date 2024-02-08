@@ -73,27 +73,9 @@ public partial class @DefaultPlayerActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Grab"",
-                    ""type"": ""Button"",
-                    ""id"": ""43fe3cf4-a45f-49ca-97b5-a5aa5d6a7a85"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""06a00800-08b7-4665-9102-cdf4590b338c"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Ungrab"",
-                    ""type"": ""Button"",
-                    ""id"": ""8ca7c1a7-5139-479a-b591-26abf1ea37b4"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -301,28 +283,6 @@ public partial class @DefaultPlayerActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c928d15f-2cee-4105-90ac-ce0ad8b026e9"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": ""Hold(duration=0.2)"",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Grab"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c42a2966-bd46-472e-9a87-fb5f5217cfb6"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": ""Hold(duration=0.2)"",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Grab"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""366a999e-e81a-43c9-b6ba-7443317fac88"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": ""Press(behavior=1)"",
@@ -340,28 +300,6 @@ public partial class @DefaultPlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Pause"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1dd540fb-38a3-4118-b089-ee9c777fd60c"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": ""Press(behavior=1)"",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Ungrab"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""756b9a3c-d0e9-44ba-a217-d60eb14e62a3"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": ""Press(behavior=1)"",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Ungrab"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -820,9 +758,7 @@ public partial class @DefaultPlayerActions: IInputActionCollection2, IDisposable
         m_Player_Activate = m_Player.FindAction("Activate", throwIfNotFound: true);
         m_Player_Strike = m_Player.FindAction("Strike", throwIfNotFound: true);
         m_Player_SwitchDrive = m_Player.FindAction("SwitchDrive", throwIfNotFound: true);
-        m_Player_Grab = m_Player.FindAction("Grab", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
-        m_Player_Ungrab = m_Player.FindAction("Ungrab", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -902,9 +838,7 @@ public partial class @DefaultPlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Activate;
     private readonly InputAction m_Player_Strike;
     private readonly InputAction m_Player_SwitchDrive;
-    private readonly InputAction m_Player_Grab;
     private readonly InputAction m_Player_Pause;
-    private readonly InputAction m_Player_Ungrab;
     public struct PlayerActions
     {
         private @DefaultPlayerActions m_Wrapper;
@@ -914,9 +848,7 @@ public partial class @DefaultPlayerActions: IInputActionCollection2, IDisposable
         public InputAction @Activate => m_Wrapper.m_Player_Activate;
         public InputAction @Strike => m_Wrapper.m_Player_Strike;
         public InputAction @SwitchDrive => m_Wrapper.m_Player_SwitchDrive;
-        public InputAction @Grab => m_Wrapper.m_Player_Grab;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
-        public InputAction @Ungrab => m_Wrapper.m_Player_Ungrab;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -941,15 +873,9 @@ public partial class @DefaultPlayerActions: IInputActionCollection2, IDisposable
             @SwitchDrive.started += instance.OnSwitchDrive;
             @SwitchDrive.performed += instance.OnSwitchDrive;
             @SwitchDrive.canceled += instance.OnSwitchDrive;
-            @Grab.started += instance.OnGrab;
-            @Grab.performed += instance.OnGrab;
-            @Grab.canceled += instance.OnGrab;
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
-            @Ungrab.started += instance.OnUngrab;
-            @Ungrab.performed += instance.OnUngrab;
-            @Ungrab.canceled += instance.OnUngrab;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -969,15 +895,9 @@ public partial class @DefaultPlayerActions: IInputActionCollection2, IDisposable
             @SwitchDrive.started -= instance.OnSwitchDrive;
             @SwitchDrive.performed -= instance.OnSwitchDrive;
             @SwitchDrive.canceled -= instance.OnSwitchDrive;
-            @Grab.started -= instance.OnGrab;
-            @Grab.performed -= instance.OnGrab;
-            @Grab.canceled -= instance.OnGrab;
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
-            @Ungrab.started -= instance.OnUngrab;
-            @Ungrab.performed -= instance.OnUngrab;
-            @Ungrab.canceled -= instance.OnUngrab;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1146,9 +1066,7 @@ public partial class @DefaultPlayerActions: IInputActionCollection2, IDisposable
         void OnActivate(InputAction.CallbackContext context);
         void OnStrike(InputAction.CallbackContext context);
         void OnSwitchDrive(InputAction.CallbackContext context);
-        void OnGrab(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
-        void OnUngrab(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

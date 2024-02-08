@@ -14,9 +14,18 @@ public class VolumeSwitcher : MonoBehaviour
     {
         _volume = GetComponent<Volume>();
         _volume.profile = _bodyVolume;
+    }
 
+    private void OnEnable()
+    {
         // Add an event handler for the drive switch event.
         PlayerSwitchDrive.OnSwitchDriveEvent += SwitchVolume;
+    }
+
+    private void OnDisable()
+    {
+        // Remove the event handler for the drive switch event.
+        PlayerSwitchDrive.OnSwitchDriveEvent -= SwitchVolume;
     }
 
     public void SwitchVolume()

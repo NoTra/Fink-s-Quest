@@ -70,6 +70,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c9ff1fa18c41c544bb3313697918e49b,
         type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c9ff1fa18c41c544bb3313697918e49b,
+        type: 3}
       propertyPath: m_StaticEditorFlags
       value: 1
       objectReference: {fileID: 0}
@@ -113,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isActive: 0
-  _emitterIntensityOff: -10
+  _emitterIntensityOff: 0
   _emitterIntensityOn: 10
   _transitionSpeed: 0.1
 --- !u!65 &4977754715321745927

@@ -21,16 +21,20 @@ public class Visibility : MonoBehaviour
         _boxCollider = GetComponent<BoxCollider>();
     }
 
+    private void OnEnable()
+    {
+        PlayerSwitchDrive.OnSwitchDriveEvent += SwitchVisibility;
+    }
+
+    private void OnDisable()
+    {
+        PlayerSwitchDrive.OnSwitchDriveEvent -= SwitchVisibility;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("Visibility Start");
-        SwitchVisibility();
-    }
-
-    private void OnSwitchDrive()
-    {
-        Debug.Log("OnSwitchDrive called on Visibility!");
         SwitchVisibility();
     }
 
@@ -44,12 +48,12 @@ public class Visibility : MonoBehaviour
                 _meshRenderer.enabled = true;
                 _boxCollider.enabled = true;
             }
-            else
+            /*else
             {
                 // Désactivate _meshRenderer && _boxCollider
                 _meshRenderer.enabled = false;
                 _boxCollider.enabled = false;
-            }
+            }*/
         }
         else
         {
@@ -58,11 +62,11 @@ public class Visibility : MonoBehaviour
                 _meshRenderer.enabled = false;
                 _boxCollider.enabled = false;
             }
-            else
+            /*else
             {
                 _meshRenderer.enabled = true;
                 _boxCollider.enabled = true;
-            }
+            }*/
         }
     }
 }

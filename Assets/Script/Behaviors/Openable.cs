@@ -22,7 +22,7 @@ public class Openable : MonoBehaviour
     {
         if (_enemiesToKill.Count == 0)
         {
-            return false;
+            return true;
         }
 
         // Check if all gameObject Enemies are Destroyed
@@ -41,7 +41,7 @@ public class Openable : MonoBehaviour
     {
         if (_activableButtons.Count == 0)
         {
-            return false;
+            return true;
         }
 
         foreach (Activable activable in _activableButtons)
@@ -59,16 +59,12 @@ public class Openable : MonoBehaviour
     {
         if (!_isOpen)
         {
-            if (_activableButtons.Count > 0 && CheckButtons())
-            {
+            Debug.Log("CheckButtons: " + CheckButtons());
+            Debug.Log("CheckEnemies: " + CheckEnemies());
+            if (CheckButtons() && CheckEnemies()) {
                 Debug.Log("Openable is open (buttons)");
                 _isOpen = true;
 
-            }
-            if (_enemiesToKill.Count > 0 && CheckEnemies())
-            {
-                Debug.Log("Openable is open (enemies)");
-                _isOpen = true;
             }
         }
     }

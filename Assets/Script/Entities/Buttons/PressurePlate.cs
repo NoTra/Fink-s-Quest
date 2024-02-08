@@ -6,7 +6,7 @@ public class PressurePlate : Activable
     MeshRenderer _meshRenderer;
 
     Material _emitterMaterial;
-    [SerializeField] float _emitterIntensityOff = -10f;
+    [SerializeField] float _emitterIntensityOff = 0f;
     [SerializeField] float _emitterIntensityOn = 10f;
     [SerializeField] float _transitionSpeed = 0.5f;
     Color _startEmissionColor;

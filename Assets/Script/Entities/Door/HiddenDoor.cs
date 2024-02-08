@@ -30,6 +30,18 @@ public class HiddenDoor : Openable
 
     public IEnumerator OpenDoor()
     {
+        var currentRoom = GameManager.Instance._currentRoom.GetComponent<Room>();
+        // On cherche tous les Thrower de la salle et on les désactive
+        foreach (Thrower thrower in GameManager.Instance._currentRoom.GetComponentsInChildren<Thrower>())
+        {
+            thrower.isActivated = false;
+            thrower.DestroyAllProjectiles();
+        }
+
+        currentRoom._isResolved = true;
+
+
+
         GameManager.Instance.Player.GetRigidbody().velocity = Vector3.zero;
         GameManager.Instance.Player._canGrab = false;
         GameManager.Instance.Player._canMove = false;
