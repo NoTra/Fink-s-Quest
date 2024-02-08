@@ -130,6 +130,8 @@ public class GoToNextRoom : MonoBehaviour
         _player._canGrab = true;
         _playerAnimator.SetBool("isRunning", false);
 
+        GameManager.Instance._currentRoom.GetComponent<Room>().OnLeaveRoom();
+
         GameManager.Instance._currentRoom = _nextRoom;
 
         // Activation du dialog si présent

@@ -49,15 +49,15 @@ public class Hittable : MonoBehaviour
         Debug.Log("Flash red !!!!!!!");
 
         // Stocker les matériaux d'origine dans une liste
-        List<Material> defaultMaterials = new List<Material>(_renderer.materials);
+        List<Material> defaultMaterials = new(_renderer.materials);
 
         // Créer une liste pour stocker les matériaux modifiés
-        List<Material> coloredMaterials = new List<Material>();
+        List<Material> coloredMaterials = new();
 
         // Cloner les matériaux pour éviter de modifier les originaux
         foreach (Material material in defaultMaterials)
         {
-            Material coloredMaterial = new Material(material);
+            var coloredMaterial = new Material(material);
             coloredMaterials.Add(coloredMaterial);
             coloredMaterial.color = _targetColor; // Modifier la couleur pour le clignotement
         }
@@ -167,6 +167,12 @@ public class Hittable : MonoBehaviour
             }
             else
             {
+                if (GetComponent<Skeleton>() != null)
+                {
+                    // Remove the skeleton from the room
+                    GameManager.Instance._currentRoom.GetComponent<Room>().RemoveSkeleton(GetComponent<Skeleton>());
+                }
+
                 Destroy(gameObject);
             }
         }

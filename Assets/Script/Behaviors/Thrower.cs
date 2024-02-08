@@ -67,21 +67,24 @@ public class Thrower : MonoBehaviour
         _audioSource.PlayOneShot(GameManager.Instance._audioManager._laserShotSound);
     }
 
-    public void DestroyAllProjectiles()
+    public void DestroyAllProjectiles(bool showEffects = true)
     {
         var _projectilesCopy = new List<Projectile>(_projectiles);
         foreach (Projectile projectile in _projectilesCopy)
         {
-            projectile.DestroySelf();
+            projectile.DestroySelf(showEffects);
         }
 
-        _audioSource.PlayOneShot(GameManager.Instance._audioManager._laserImpactSound);
-        _projectiles.Clear();
+        if (showEffects)
+        {
+            _audioSource.PlayOneShot(GameManager.Instance._audioManager._laserImpactSound);
+            _projectiles.Clear();
 
-        // On éteint la tour
-        // Ball.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.black);
-        Color startColor = Ball.GetComponent<MeshRenderer>().material.GetColor("_EmissionColor");
-        StartCoroutine(LerpMaterialColor(startColor, Color.black, 1f));
+            // On éteint la tour
+            Color startColor = Ball.GetComponent<MeshRenderer>().material.GetColor("_EmissionColor");
+            StartCoroutine(LerpMaterialColor(startColor, Color.black, 1f));
+        }
+        
     }
 
     IEnumerator LerpMaterialColor(Color startColor, Color endColor, float duration)

@@ -81,8 +81,9 @@ GameObject:
   - component: {fileID: 4239273980771318092}
   - component: {fileID: 776202140113844694}
   - component: {fileID: 518081594158927196}
+  - component: {fileID: 3550636232016618104}
   m_Layer: 9
-  m_Name: GrabCube
+  m_Name: Crate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -302,6 +303,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3550636232016618104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2742539682910199134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3363ca310157242a9343137e937e96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _startingPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &7089682917176157981
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,6 +15,9 @@ public class Skeleton : MonoBehaviour
     [SerializeField] private float _timeBetweenStrikes = 1f;
     private float _timeSinceLastStrike = 0f;
 
+    public Vector3 _startingPosition;
+    private Room _room;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +31,11 @@ public class Skeleton : MonoBehaviour
         _skeletonRoom = GetComponentInParent<Room>().gameObject;
 
         _timeSinceLastStrike = Time.time;
+
+        _startingPosition = transform.position;
+
+        _room = GetComponentInParent<Room>();
+        _room.AddSkeleton(this);
     }
 
     // Update is called once per frame

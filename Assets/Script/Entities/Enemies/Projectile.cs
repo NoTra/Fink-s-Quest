@@ -75,13 +75,16 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    public void DestroySelf()
+    public void DestroySelf(bool showEffects = true)
     {
-        // On instancie une particule d'impact
-        GameObject impactParticle = Instantiate(_impactParticle, transform.position, Quaternion.identity);
+        if (showEffects)
+        {
+            // On instancie une particule d'impact
+            GameObject impactParticle = Instantiate(_impactParticle, transform.position, Quaternion.identity);
 
-        // On détruit la particule d'impact après 1 seconde
-        Destroy(impactParticle, 1f);
+            // On détruit la particule d'impact après 1 seconde
+            Destroy(impactParticle, 1f);
+        }
 
         Thrower._projectiles.Remove(this);
         Destroy(gameObject);

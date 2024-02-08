@@ -6,6 +6,7 @@ public class Door : Openable
     private Animator _animator;
     private AudioSource _audioSource;
     [SerializeField] private MeshRenderer _meshRenderer;
+    private Room _room;
 
     [SerializeField] private Color _color;
     [SerializeField] private float intensity;
@@ -20,6 +21,10 @@ public class Door : Openable
         materials[1].SetColor("_EmissionColor", _color * intensity);
 
         _meshRenderer.materials = materials;
+
+        _room = GetComponentInParent<Room>();
+
+        _previousOpenState = _isOpen;
     }
 
     // Update is called once per frame
@@ -50,13 +55,8 @@ public class Door : Openable
                 thrower.isActivated = false;
                 thrower.DestroyAllProjectiles();
             }
-        }
-        else
-        {
-            _animator.SetBool("isOpen", false);
-            // Play sound doorClose
-            _audioSource.PlayOneShot(GameManager.Instance._audioManager._closeDoorSound);
-            _previousOpenState = _isOpen;
+
+            _room._isResolved = true;
         }
     }
 
