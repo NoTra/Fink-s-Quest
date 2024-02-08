@@ -7,17 +7,32 @@ using UnityEngine.SceneManagement;
 
 public class GoToNextRoom : MonoBehaviour
 {
-    public GameObject _room;
-    [HideInInspector] public GameObject _nextRoom;
-    public GameObject _mirrorTrigger;
-    public GameObject _outPoint;
+    // Triggers
+    [SerializeField] private Room _roomA;
+    [SerializeField] private Trigger _triggerA;
+    [SerializeField] private Transform _outPointA;
+
+    [SerializeField] private Room _roomB;
+    [SerializeField] private Trigger _triggerB;
+    [SerializeField] private Transform _outPointB;
+
+    // Variable utilisée pour réaliser la transition
+    private GameObject _nextRoom;
+    private GameObject _mirrorTrigger;
+    private Transform _outPoint;
+
+    // Player
     private Player _player;
     private Rigidbody _playerRigidbody;
     private Animator _playerAnimator;
+
+    // Camera
     private CameraMovement _cameraMovement;
     private Camera _mainCamera;
 
     [SerializeField] AnimationCurve _transitionCurve = AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f);
+
+    [SerializeField] private Animator _transitionAnimator;
 
     private void Awake()
     {
@@ -27,8 +42,6 @@ public class GoToNextRoom : MonoBehaviour
         _player = GameManager.Instance.Player;
         _playerRigidbody = _player.GetRigidbody();
         _playerAnimator = _player.GetAnimator();
-
-        _nextRoom = _mirrorTrigger.GetComponent<GoToNextRoom>()._room.gameObject;
     }
 
     void Start()
@@ -36,13 +49,22 @@ public class GoToNextRoom : MonoBehaviour
         
     }
 
-    void OnTriggerEnter(Collider collider)
+    private void Update()
     {
-        if (collider.gameObject.CompareTag("Player"))
+        if (_triggerA._isTriggered)
         {
-            GameManager.Instance._currentRoom = _nextRoom;
-
-            // On Lerp la caméra vers la prochaine salle, on monte de la hauteur de la salle actuelle
+            _nextRoom = _roomB.gameObject;
+            _outPoint = _outPointA;
+            _triggerA._isTriggered = false;
+            _mirrorTrigger = _triggerB.gameObject;
+            StartCoroutine(PerformGoToNextRoom());
+        }
+        else if (_triggerB._isTriggered)
+        {
+            _nextRoom = _roomA.gameObject;
+            _outPoint = _outPointB;
+            _triggerB._isTriggered = false;
+            _mirrorTrigger = _triggerA.gameObject;
             StartCoroutine(PerformGoToNextRoom());
         }
     }
@@ -50,6 +72,7 @@ public class GoToNextRoom : MonoBehaviour
     private IEnumerator PerformGoToNextRoom()
     {
         Debug.Log("PerformGoToNextRoom...");
+
         // On désactive le mouvement de la caméra
         _cameraMovement._freeMove = true;
 
@@ -60,7 +83,7 @@ public class GoToNextRoom : MonoBehaviour
         _playerAnimator.SetBool("isRunning", false);
 
         float elapsedTime = 0;
-        float duration = 1f;
+        float duration = 2f;
 
         Vector3 playerStartPosition = _playerRigidbody.transform.position;
         Vector3 playerEndPosition = new (
@@ -84,12 +107,12 @@ public class GoToNextRoom : MonoBehaviour
         _playerRigidbody.GetComponent<Collider>().enabled = false;
         _playerAnimator.SetBool("isRunning", true);
 
+        // Début transition
+        StartCoroutine(StartRoomTransition());
+
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
-
-            // On Lerp la caméra vers la prochaine salle
-            _mainCamera.transform.position = Vector3.Lerp(cameraStartPosition, cameraEndPosition, elapsedTime / duration);
 
             // On fait marcher le joueur vers le trigger mirroir de la prochaine salle
             _playerRigidbody.transform.position = Vector3.Lerp(playerStartPosition, playerEndPosition, _transitionCurve.Evaluate(elapsedTime / duration));
@@ -107,6 +130,8 @@ public class GoToNextRoom : MonoBehaviour
         _player._canGrab = true;
         _playerAnimator.SetBool("isRunning", false);
 
+        GameManager.Instance._currentRoom = _nextRoom;
+
         // Activation du dialog si présent
         DialogBox dialogBox = _nextRoom.GetComponent<DialogBox>();
 
@@ -121,6 +146,21 @@ public class GoToNextRoom : MonoBehaviour
         _cameraMovement.Init();
         _cameraMovement._freeMove = false;
 
+        yield return null;
+
+        // Fin transition
+        StartCoroutine(EndRoomTransition());
+    }
+
+    IEnumerator StartRoomTransition()
+    {
+        _transitionAnimator.SetTrigger("StartTransition");
+        yield return null;
+    }
+
+    IEnumerator EndRoomTransition()
+    {
+        _transitionAnimator.SetTrigger("EndTransition");
         yield return null;
     }
 }
