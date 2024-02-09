@@ -8,7 +8,6 @@ namespace FinksQuest.Behavior
         private void Awake()
         {
             var _slider = GetComponent<Slider>();
-
         }
     }
 }

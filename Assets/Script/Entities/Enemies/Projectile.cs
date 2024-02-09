@@ -27,7 +27,7 @@ namespace FinksQuest.Entities.Enemies
         {
             Debug.Log($"Projectile hit {other.gameObject.name}");
             // Il touche un objet Hittable ? (peut faire du dégât aux ennemis)
-            Behavior.Hittable hittable = other.gameObject.GetComponent<Behavior.Hittable>();
+            Hittable hittable = other.gameObject.GetComponent<Hittable>();
             // If hittable and 
             if (hittable != null)
             {
