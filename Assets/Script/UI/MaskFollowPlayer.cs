@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MaskFollowPlayer : MonoBehaviour
+namespace FinksQuest.UI
 {
-    [SerializeField] private Image circle;
-    [SerializeField] private Transform player;
-    private RectTransform rectTransform;
-
-    // Start is called before the first frame update
-    void Start()
+    public class MaskFollowPlayer : MonoBehaviour
     {
-        rectTransform = circle.GetComponent<RectTransform>();
-    }
+        [SerializeField] private Image circle;
+        [SerializeField] private Transform player;
+        private RectTransform rectTransform;
 
-    public void CenterCircleOnPlayer()
-    {
-        // Change pivot to player position
-        rectTransform.position = Camera.main.WorldToScreenPoint(player.position);
+        // Start is called before the first frame update
+        void Start()
+        {
+            rectTransform = circle.GetComponent<RectTransform>();
+        }
+
+        public void CenterCircleOnPlayer()
+        {
+            // Change pivot to player position
+            rectTransform.position = Camera.main.WorldToScreenPoint(player.position);
+        }
     }
 }

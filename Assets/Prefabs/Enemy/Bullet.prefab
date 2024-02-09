@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -4526610134501067742}
   - component: {fileID: -2786197482571383237}
   - component: {fileID: -330746740845447162}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,14 +120,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b2775ac9b9fc547aae88f38f4836c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Thrower: {fileID: 0}
+  _thrower: {fileID: 0}
   _throwStrength: 0.5
   _damage: 1
   _invulnerableTag:
   - Enemy
   _impactParticle: {fileID: 4021103657954561961, guid: cbfccc2b5a10b9444a84343213128b4b,
     type: 3}
-  _audioSource: {fileID: 0}
 --- !u!54 &-2786197482571383237
 Rigidbody:
   m_ObjectHideFlags: 0

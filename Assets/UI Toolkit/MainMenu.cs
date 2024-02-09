@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
-using System.Linq;
-using System;
 using UnityEngine.Audio;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.UI;
-using System.Runtime.CompilerServices;
+
+using FinksQuest.Core;
 
 public class MainMenu : MonoBehaviour
 {

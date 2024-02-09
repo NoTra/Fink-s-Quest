@@ -1,15 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CutoutMaskUI : Image
+namespace FinksQuest.UI
 {
-    public override Material materialForRendering
+    public class CutoutMaskUI : Image
     {
-        get
+        public override Material materialForRendering
         {
-            var material = new Material(base.materialForRendering);
-            material.SetFloat("_StencilComp", (float)UnityEngine.Rendering.CompareFunction.NotEqual);
-            return material;
+            get
+            {
+                var material = new Material(base.materialForRendering);
+                material.SetFloat("_StencilComp", (float)UnityEngine.Rendering.CompareFunction.NotEqual);
+                return material;
+            }
         }
     }
 }

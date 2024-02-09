@@ -22,8 +22,8 @@ TagManager:
   - Destroyable
   - PressurePlate
   - Button
-  - 
-  - 
+  - Projectile
+  - Player
   - 
   - 
   - 

@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 2891313693992421515}
   - component: {fileID: 7832251796793747028}
   - component: {fileID: 5514656967985262954}
-  - component: {fileID: 236464350462524905}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -177,22 +176,6 @@ MonoBehaviour:
     m_ActionId: f207bf09-a8e6-4609-aea8-0dd784913666
     m_ActionName: Player/SwitchDrive[/DualSenseGamepadHID/buttonNorth,/Keyboard/q]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GrabMovable, Assembly-CSharp
-        m_MethodName: OnGrab
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 43fe3cf4-a45f-49ca-97b5-a5aa5d6a7a85
-    m_ActionName: Player/Grab[/DualSenseGamepadHID/buttonSouth,/Keyboard/e]
-  - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 06a00800-08b7-4665-9102-cdf4590b338c
     m_ActionName: Player/Pause[/Keyboard/escape,/DualSenseGamepadHID/start]
@@ -284,22 +267,6 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 84ce8878-89cd-4050-9369-1e69cdf1cf6b
     m_ActionName: UI/Unpause[/Keyboard/escape,/DualSenseGamepadHID/start]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GrabMovable, Assembly-CSharp
-        m_MethodName: OnUngrab
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 8ca7c1a7-5139-479a-b591-26abf1ea37b4
-    m_ActionName: Player/Ungrab[/Keyboard/e,/DualSenseGamepadHID/buttonSouth]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -407,6 +374,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _timeBetweenDashes: 1
+  _stepEffect: {fileID: 0}
+  _dashSound: {fileID: 0}
   trail: {fileID: 3671162891390397049}
 --- !u!114 &7832251796793747028
 MonoBehaviour:
@@ -432,19 +401,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b184cb03abe576a488f069a5cd2b9eca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &236464350462524905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 978112670332400607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b937dc0db671f2c49bd2e38a2fa158cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _grabbedSlot: {fileID: 6274743290106211341}
 --- !u!1001 &1969793229316367610
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -508,6 +464,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Body
       objectReference: {fileID: 0}
+    - target: {fileID: 8422892626600285392, guid: 214e08cd5e5d74c458e2a81b7ec2c84c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -516,12 +477,6 @@ PrefabInstance:
 --- !u!96 &3671162891390397049 stripped
 TrailRenderer:
   m_CorrespondingSourceObject: {fileID: 3000676854927756931, guid: 214e08cd5e5d74c458e2a81b7ec2c84c,
-    type: 3}
-  m_PrefabInstance: {fileID: 1969793229316367610}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6274743290106211341 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5495026270923442423, guid: 214e08cd5e5d74c458e2a81b7ec2c84c,
     type: 3}
   m_PrefabInstance: {fileID: 1969793229316367610}
   m_PrefabAsset: {fileID: 0}

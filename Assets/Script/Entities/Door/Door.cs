@@ -1,70 +1,76 @@
 using System.Collections;
 using UnityEngine;
 
-public class Door : Openable
+using FinksQuest.Core;
+using FinksQuest.Behavior;
+
+namespace FinksQuest.Entities.Door
 {
-    private Animator _animator;
-    private AudioSource _audioSource;
-    [SerializeField] private MeshRenderer _meshRenderer;
-    private Room _room;
-
-    [SerializeField] private Color _color;
-    [SerializeField] private float intensity;
-
-    // Start is called before the first frame update
-    void Start()
+    public class Door : Openable
     {
-        _animator = GetComponent<Animator>();
-        _audioSource = GetComponent<AudioSource>();
+        private Animator _animator;
+        private AudioSource _audioSource;
+        [SerializeField] private MeshRenderer _meshRenderer;
+        private Room _room;
 
-        Material[] materials = _meshRenderer.materials;
-        materials[1].SetColor("_EmissionColor", _color * intensity);
+        [SerializeField] private Color _color;
+        [SerializeField] private float intensity;
 
-        _meshRenderer.materials = materials;
-
-        _room = GetComponentInParent<Room>();
-
-        _previousOpenState = _isOpen;
-    }
-
-    // Update is called once per frame
-    new void Update()
-    {
-        base.Update();
-
-        if (_isOpen == _previousOpenState)
+        // Start is called before the first frame update
+        void Start()
         {
-            return;
-        }
+            _animator = GetComponent<Animator>();
+            _audioSource = GetComponent<AudioSource>();
 
-        if (_isOpen)
-        {
-            _animator.SetBool("isOpen", true);
+            Material[] materials = _meshRenderer.materials;
+            materials[1].SetColor("_EmissionColor", _color * intensity);
 
-            // Play sound doorOpen
-            _audioSource.PlayOneShot(GameManager.Instance._audioManager._openDoorSound);
+            _meshRenderer.materials = materials;
 
-            // Play sound secretFound after 0.5s
-            StartCoroutine(PlaySecretFoundSound());
+            _room = GetComponentInParent<Room>();
 
             _previousOpenState = _isOpen;
+        }
 
-            // On cherche tous les Thrower de la salle et on les désactive
-            foreach (Thrower thrower in GameManager.Instance._currentRoom.GetComponentsInChildren<Thrower>())
+        // Update is called once per frame
+        new void Update()
+        {
+            base.Update();
+
+            if (_isOpen == _previousOpenState)
             {
-                thrower.isActivated = false;
-                thrower.DestroyAllProjectiles();
+                return;
             }
 
-            _room._isResolved = true;
+            if (_isOpen)
+            {
+                _animator.SetBool("isOpen", true);
+
+                // Play sound doorOpen
+                _audioSource.PlayOneShot(GameManager.Instance._audioManager._openDoorSound);
+
+                // Play sound secretFound after 0.5s
+                StartCoroutine(PlaySecretFoundSound());
+
+                _previousOpenState = _isOpen;
+
+                // On cherche tous les Thrower de la salle et on les désactive
+                foreach (Thrower thrower in GameManager.Instance._currentRoom.GetComponentsInChildren<Thrower>())
+                {
+                    thrower.isActivated = false;
+                    thrower.DestroyAllProjectiles();
+                }
+
+                _room._isResolved = true;
+            }
         }
-    }
 
-    private IEnumerator PlaySecretFoundSound()
-    {
-        yield return new WaitForSeconds(1f);
-        // _audioSource.PlayOneShot(GameManager.Instance._audioManager._secretFoundSound);
-        GameManager.Instance._audioManager._audioSource.PlayOneShot(GameManager.Instance._audioManager._roomClearedSound);
-    }
+        private IEnumerator PlaySecretFoundSound()
+        {
+            yield return new WaitForSeconds(1f);
+            // _audioSource.PlayOneShot(GameManager.Instance._audioManager._secretFoundSound);
+            GameManager.Instance._audioManager._audioSource.PlayOneShot(GameManager.Instance._audioManager._roomClearedSound);
+        }
 
+    }
 }

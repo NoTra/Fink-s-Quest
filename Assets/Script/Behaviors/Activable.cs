@@ -1,24 +1,27 @@
 ﻿using UnityEngine;
 
-public class Activable : MonoBehaviour
+namespace FinksQuest.Behavior
 {
-    public bool _isActive = false;
-
-    protected void Activate()
+    public class Activable : MonoBehaviour
     {
-        _isActive = true;
-    }
+        public bool _isActive = false;
 
-    protected void Deactivate()
-    {
-        _isActive = false;
-    }
+        protected void Activate()
+        {
+            _isActive = true;
+        }
 
-    protected void Toggle()
-    {
-        if (_isActive)
-            Deactivate();
-        else
-            Activate();
+        protected void Deactivate()
+        {
+            _isActive = false;
+        }
+
+        protected void Toggle()
+        {
+            if (_isActive)
+                Deactivate();
+            else
+                Activate();
+        }
     }
 }

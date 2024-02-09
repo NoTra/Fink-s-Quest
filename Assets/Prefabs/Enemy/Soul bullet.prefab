@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1217937131519876822}
   - component: {fileID: 3410073560428114733}
   - component: {fileID: 2230411903745946751}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 8391224608132631768}
   - component: {fileID: -4526610134501067742}
   - component: {fileID: -2786197482571383237}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Soul bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -238,12 +238,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b2775ac9b9fc547aae88f38f4836c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _impactParticle: {fileID: 8675779563346028947, guid: 83d755b145902b64d866c6f225e9b512,
-    type: 3}
+  _thrower: {fileID: 0}
   _throwStrength: 0.5
   _damage: 1
   _invulnerableTag:
   - Enemy
+  _impactParticle: {fileID: 8675779563346028947, guid: 83d755b145902b64d866c6f225e9b512,
+    type: 3}
 --- !u!54 &-2786197482571383237
 Rigidbody:
   m_ObjectHideFlags: 0

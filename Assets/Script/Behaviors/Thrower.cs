@@ -2,98 +2,104 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Thrower : MonoBehaviour
+using FinksQuest.Core;
+using FinksQuest.Entities.Enemies;
+
+namespace FinksQuest.Behavior
 {
-    [SerializeField] private GameObject _target;
-    [SerializeField] private GameObject _projectile;
-    [SerializeField] private float _throwStrength = 5f;
-    [SerializeField] private float _timeBetweenThrows = 1f;
-    [SerializeField] private float _damage = 1f;
-    [SerializeField] private GameObject Ball;
-    private AudioSource _audioSource;
-
-    public List<Projectile> _projectiles = new List<Projectile>();
-
-    public bool isActivated = true;
-    private GameObject _currentRoom;
-
-    private float _lastThrowTime;
-
-    // Start is called before the first frame update
-    void Start()
+    public class Thrower : MonoBehaviour
     {
-        _currentRoom = GetComponentInParent<Room>().gameObject;
-        _audioSource = GetComponent<AudioSource>();
+        [SerializeField] private GameObject _target;
+        [SerializeField] private GameObject _projectile;
+        [SerializeField] private float _throwStrength = 5f;
+        [SerializeField] private float _timeBetweenThrows = 1f;
+        [SerializeField] private float _damage = 1f;
+        [SerializeField] private GameObject Ball;
+        private AudioSource _audioSource;
 
-        _lastThrowTime = Time.time;
-    }
+        public List<Projectile> _projectiles = new List<Entities.Enemies.Projectile>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        // Every _timeBetweenThrows seconds, launch ThrowProjectile
-        if (_currentRoom == GameManager.Instance._currentRoom && isActivated && (Time.time - _lastThrowTime) > _timeBetweenThrows)
+        public bool isActivated = true;
+        private GameObject _currentRoom;
+
+        private float _lastThrowTime;
+
+        // Start is called before the first frame update
+        void Start()
         {
+            _currentRoom = GetComponentInParent<Room>().gameObject;
+            _audioSource = GetComponent<AudioSource>();
+
             _lastThrowTime = Time.time;
-            ThrowProjectile();
         }
-    }
 
-    // Throw a projectile at the player position
-    private void ThrowProjectile()
-    {
-        Vector3 startPosition = transform.position;
-        Vector3 targetPosition = _target.transform.position;
-
-        // On définit une direction pour le projectile
-        Vector3 direction = targetPosition - startPosition;
-
-        // Instantiate projectile
-        GameObject projectile = Instantiate(_projectile, startPosition, Quaternion.identity);
-        // Set projectile's target tag
-        Projectile projectileScript = projectile.GetComponent<Projectile>();
-        projectileScript._throwStrength = _throwStrength;
-        projectileScript._damage = _damage;
-
-        projectile.GetComponent<Rigidbody>().AddForce(direction.normalized * _throwStrength, ForceMode.Impulse);
-
-        projectileScript.Thrower = this;
-
-        _projectiles.Add(projectileScript);
-
-        _audioSource.PlayOneShot(GameManager.Instance._audioManager._laserShotSound);
-    }
-
-    public void DestroyAllProjectiles(bool showEffects = true)
-    {
-        var _projectilesCopy = new List<Projectile>(_projectiles);
-        foreach (Projectile projectile in _projectilesCopy)
+        // Update is called once per frame
+        void Update()
         {
-            projectile.DestroySelf(showEffects);
+            // Every _timeBetweenThrows seconds, launch ThrowProjectile
+            if (_currentRoom == GameManager.Instance._currentRoom && isActivated && (Time.time - _lastThrowTime) > _timeBetweenThrows)
+            {
+                _lastThrowTime = Time.time;
+                ThrowProjectile();
+            }
         }
 
-        if (showEffects)
+        // Throw a projectile at the player position
+        private void ThrowProjectile()
         {
-            _audioSource.PlayOneShot(GameManager.Instance._audioManager._laserImpactSound);
-            _projectiles.Clear();
+            Vector3 startPosition = transform.position;
+            Vector3 targetPosition = _target.transform.position;
 
-            // On éteint la tour
-            Color startColor = Ball.GetComponent<MeshRenderer>().material.GetColor("_EmissionColor");
-            StartCoroutine(LerpMaterialColor(startColor, Color.black, 1f));
+            // On définit une direction pour le projectile
+            Vector3 direction = targetPosition - startPosition;
+
+            // Instantiate projectile
+            GameObject projectile = Instantiate(_projectile, startPosition, Quaternion.identity);
+            // Set projectile's target tag
+            Entities.Enemies.Projectile projectileScript = projectile.GetComponent<Entities.Enemies.Projectile>();
+            projectileScript._throwStrength = _throwStrength;
+            projectileScript._damage = _damage;
+
+            projectile.GetComponent<Rigidbody>().AddForce(direction.normalized * _throwStrength, ForceMode.Impulse);
+
+            projectileScript._thrower = this;
+
+            _projectiles.Add(projectileScript);
+
+            _audioSource.PlayOneShot(GameManager.Instance._audioManager._laserShotSound);
         }
-        
-    }
 
-    IEnumerator LerpMaterialColor(Color startColor, Color endColor, float duration)
-    {
-        float elapsedTime = 0f;
-        while (elapsedTime < duration)
+        public void DestroyAllProjectiles(bool showEffects = true)
         {
-            Ball.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.Lerp(startColor, endColor, elapsedTime / duration));
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            var _projectilesCopy = new List<Entities.Enemies.Projectile>(_projectiles);
+            foreach (Entities.Enemies.Projectile projectile in _projectilesCopy)
+            {
+                projectile.DestroySelf(showEffects);
+            }
+
+            if (showEffects)
+            {
+                _audioSource.PlayOneShot(GameManager.Instance._audioManager._laserImpactSound);
+                _projectiles.Clear();
+
+                // On éteint la tour
+                Color startColor = Ball.GetComponent<MeshRenderer>().material.GetColor("_EmissionColor");
+                StartCoroutine(LerpMaterialColor(startColor, Color.black, 1f));
+            }
+
         }
 
-        Ball.GetComponent<FloatAnimation>().enabled = false;
+        IEnumerator LerpMaterialColor(Color startColor, Color endColor, float duration)
+        {
+            float elapsedTime = 0f;
+            while (elapsedTime < duration)
+            {
+                Ball.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.Lerp(startColor, endColor, elapsedTime / duration));
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            Ball.GetComponent<Animation.FloatAnimation>().enabled = false;
+        }
     }
 }
