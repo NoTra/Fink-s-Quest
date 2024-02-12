@@ -56,7 +56,7 @@ namespace FinksQuest.Behavior
             // Instantiate projectile
             GameObject projectile = Instantiate(_projectile, startPosition, Quaternion.identity);
             // Set projectile's target tag
-            Entities.Enemies.Projectile projectileScript = projectile.GetComponent<Entities.Enemies.Projectile>();
+            Projectile projectileScript = projectile.GetComponent<Projectile>();
             projectileScript._throwStrength = _throwStrength;
             projectileScript._damage = _damage;
 
@@ -67,6 +67,7 @@ namespace FinksQuest.Behavior
             _projectiles.Add(projectileScript);
 
             _audioSource.PlayOneShot(GameManager.Instance._audioManager._laserShotSound);
+            Destroy(projectile, 10f);
         }
 
         public void DestroyAllProjectiles(bool showEffects = true)

@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace FinksQuest.Interactible
@@ -114,10 +116,26 @@ namespace FinksQuest.Interactible
 
         private void OnTriggerExit(Collider other)
         {
+            // Wait half a second before checking if something is still on the pressure plate
+            StartCoroutine(IsStillOnPressurePlate());
+        }
+
+        private IEnumerator IsStillOnPressurePlate()
+        {
+            // Wait half a second
+            yield return new WaitForSeconds(0.5f);
+
+            Vector3 boxSize = transform.localScale * 0.5f;
+
+            LayerMask layerMask = LayerMask.GetMask("Player", "Soul", "Grabbable");
+
             // Check if something is still intersect with BoxCollider
-            if (Physics.CheckBox(transform.position, transform.localScale / 2f, transform.rotation, LayerMask.GetMask("Player", "Soul", "Grabbable")))
+            if (Physics.OverlapBox(transform.position, boxSize, transform.rotation, layerMask).Length > 0)
             {
-                return;
+                Debug.Log("Something is still on the pressure plate");
+                Debug.Log(Physics.OverlapBox(transform.position, boxSize, transform.rotation, layerMask)[0].name);
+                // Kill the coroutine
+                yield break;
             }
 
             Deactivate();

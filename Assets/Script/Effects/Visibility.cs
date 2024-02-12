@@ -17,8 +17,8 @@ namespace FinksQuest.Effects
         {
             // GameManager.Instance._playerController.OnSwitchDriveEvent += OnSwitchDrive;
 
-            _meshRenderer = GetComponent<MeshRenderer>();
-            _boxCollider = GetComponent<BoxCollider>();
+            /*_meshRenderer = GetComponent<MeshRenderer>();
+            _boxCollider = GetComponent<BoxCollider>();*/
         }
 
         private void OnEnable()
@@ -39,33 +39,41 @@ namespace FinksQuest.Effects
 
         private void SwitchVisibility()
         {
+            Debug.Log("SwitchVisibility() called ! : " + GameManager.Instance.Player.GetDrive());
+
             if (GameManager.Instance.Player.GetDrive() == Player.Drive.SOUL)
             {
                 if (isVisibleForSoul)
                 {
                     // Activate _meshRenderer && _boxCollider
-                    _meshRenderer.enabled = true;
-                    _boxCollider.enabled = true;
+                    if (_meshRenderer != null)
+                        _meshRenderer.enabled = true;
+
+                    if (_boxCollider != null)
+                        _boxCollider.enabled = true;
+
+                    // Find all the children of the object
+                    foreach (Transform child in transform)
+                    {
+                        child.gameObject.SetActive(true);
+                    }
                 }
-                /*else
-                {
-                    // Désactivate _meshRenderer && _boxCollider
-                    _meshRenderer.enabled = false;
-                    _boxCollider.enabled = false;
-                }*/
             }
             else
             {
                 if (isVisibleForSoul)
                 {
-                    _meshRenderer.enabled = false;
+                    if (_meshRenderer != null)
+                        _meshRenderer.enabled = false;
+
+                    if (_boxCollider != null)
                     _boxCollider.enabled = false;
+
+                    foreach (Transform child in transform)
+                    {
+                        child.gameObject.SetActive(false);
+                    }
                 }
-                /*else
-                {
-                    _meshRenderer.enabled = true;
-                    _boxCollider.enabled = true;
-                }*/
             }
         }
     }

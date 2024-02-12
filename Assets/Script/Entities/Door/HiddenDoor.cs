@@ -8,6 +8,7 @@ namespace FinksQuest.Entities.Door
     public class HiddenDoor : Behavior.Openable
     {
         float _transitionSpeed = 3f;
+        [SerializeField] AudioSource _audioSource;
 
         // Start is called before the first frame update
         void Start()
