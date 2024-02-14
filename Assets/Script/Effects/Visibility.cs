@@ -39,7 +39,8 @@ namespace FinksQuest.Effects
 
         private void SwitchVisibility()
         {
-            Debug.Log("SwitchVisibility() called ! : " + GameManager.Instance.Player.GetDrive());
+            if (GameManager.Instance.Player == null)
+                return;
 
             if (GameManager.Instance.Player.GetDrive() == Player.Drive.SOUL)
             {

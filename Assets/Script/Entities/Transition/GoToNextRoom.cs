@@ -3,6 +3,7 @@ using UnityEngine;
 
 using FinksQuest.Core;
 using FinksQuest.UI;
+using UnityEngine.UI;
 
 namespace FinksQuest.Entities.Transition
 {

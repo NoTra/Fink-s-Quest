@@ -24,12 +24,7 @@ public class ShowInputInfo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerInput[] playerInputs = FindObjectsOfType<PlayerInput>();
-
-        foreach (PlayerInput playerInput in playerInputs)
-        {
-            Debug.Log(playerInput.gameObject.name + " has a PlayerInput component.");
-        }
+        
     }
 
     // Update is called once per frame
@@ -43,7 +38,7 @@ public class ShowInputInfo : MonoBehaviour
             _debugInput.text = moveDirection.ToString();
         }
 
-        if (_UIfocus != null)
+        /*if (_UIfocus != null)
         {
             VisualElement focusedElement = GameManager.Instance._currentUIDocument.rootVisualElement.focusController.focusedElement as VisualElement;
 
@@ -79,6 +74,6 @@ public class ShowInputInfo : MonoBehaviour
 
             // On passe sur la navigation standard si on a plus de focus sinon, on reste sur la navigation UI
             GameManager.Instance._eventSystem.sendNavigationEvents = (_UIfocus.text == "NaN");
-        }
+        }*/
     }
 }

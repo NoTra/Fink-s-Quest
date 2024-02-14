@@ -72,9 +72,14 @@ namespace FinksQuest.Behavior
 
         public void DestroyAllProjectiles(bool showEffects = true)
         {
-            var _projectilesCopy = new List<Entities.Enemies.Projectile>(_projectiles);
-            foreach (Entities.Enemies.Projectile projectile in _projectilesCopy)
+            var _projectilesCopy = new List<Projectile>(_projectiles);
+            foreach (Projectile projectile in _projectilesCopy)
             {
+                if (projectile == null)
+                {
+                    continue;
+                }
+
                 projectile.DestroySelf(showEffects);
             }
 

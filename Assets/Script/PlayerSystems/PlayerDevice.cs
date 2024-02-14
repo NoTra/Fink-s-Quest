@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 using FinksQuest.Core;
 
@@ -7,19 +8,18 @@ namespace FinksQuest.PlayerSystems
     public class PlayerDevice : MonoBehaviour
     {
         public string deviceName;
+        [SerializeField] private PlayerInput _playerInput;
 
-        // Start is called before the first frame update
         void Start()
         {
-            deviceName = GameManager.Instance.Player._playerInput.currentControlScheme;
+            deviceName = (_playerInput != null) ? _playerInput.currentControlScheme : "";
         }
 
-        // Update is called once per frame
         void Update()
         {
-            if (GameManager.Instance.Player._playerInput.currentControlScheme != deviceName)
+            if (_playerInput != null && _playerInput.currentControlScheme != deviceName)
             {
-                deviceName = GameManager.Instance.Player._playerInput.currentControlScheme;
+                deviceName = _playerInput.currentControlScheme;
 
                 // On sauvegarde le device actuel
                 PlayerPrefs.SetString("PlayerDevice", deviceName);

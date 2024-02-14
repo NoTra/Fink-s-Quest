@@ -89,40 +89,14 @@ namespace FinksQuest.Behavior
 
         private bool CanPushInDirection(Vector2 playerMovement)
         {
-            Debug.DrawRay(crate.position, Vector3.forward * 1f, Color.red);
-            Debug.DrawRay(crate.position, Vector3.back * 1f, Color.blue);
-            Debug.DrawRay(crate.position, Vector3.left * 1f, Color.yellow);
-            Debug.DrawRay(crate.position, Vector3.right * 1f, Color.black);
-            Debug.Log(playerMovement);
-
             RaycastHit hit;
             if (
-                Physics.Raycast(crate.position, Vector3.forward, out hit, 1f, LayerMask.GetMask("Wall")) && playerMovement.y > 0
-            )
+                Physics.Raycast(crate.position, Vector3.forward, out hit, 1f, LayerMask.GetMask("Wall")) && playerMovement.y > 0 || 
+                Physics.Raycast(crate.position, Vector3.back, out hit, 1f, LayerMask.GetMask("Wall")) && playerMovement.y < 0 ||
+                Physics.Raycast(crate.position, Vector3.right, out hit, 1f, LayerMask.GetMask("Wall")) && playerMovement.x > 0 ||
+                Physics.Raycast(crate.position, Vector3.left, out hit, 1f, LayerMask.GetMask("Wall")) && playerMovement.x < 0
+                )
             {
-                Debug.Log("Collision detected, on annule le mouvement vers le haut");
-                return false;
-            }
-
-            if (
-                Physics.Raycast(crate.position, Vector3.back, out hit, 1f, LayerMask.GetMask("Wall")) && playerMovement.y < 0
-            )
-            {
-                Debug.Log("Collision detected, on annule le mouvement vers le bas");
-                return false;
-            }
-
-            if (
-                Physics.Raycast(crate.position, Vector3.right, out hit, 1f, LayerMask.GetMask("Wall")) && playerMovement.x > 0)
-            {
-                Debug.Log("Collision detected, on annule le mouvement vers la droite");
-                return false;
-            }
-
-            if (
-                Physics.Raycast(crate.position, Vector3.left, out hit, 1f, LayerMask.GetMask("Wall")) && playerMovement.x < 0)
-            {
-                Debug.Log("Collision detected, on annule le mouvement vers la gauche");
                 return false;
             }
 
@@ -140,7 +114,6 @@ namespace FinksQuest.Behavior
                 direction.x = 0;
             }
 
-            Debug.LogWarningFormat("MoveCrateAndPlayerTo {0}", direction);
             float duration = 0.8f;
             var crateRB = crate.GetComponent<Rigidbody>();
 
@@ -173,7 +146,7 @@ namespace FinksQuest.Behavior
 
         private void OnTriggerExit(Collider collider)
         {
-            if (collider.tag == "Player")
+            if (collider.CompareTag("Player"))
             {
                 collisionTime = 0f;
 

@@ -22,11 +22,14 @@ namespace FinksQuest.PlayerSystems
                 return;
             }
 
+            Debug.Log("OnSwitch");
+
             SwitchDrive();
         }
 
         public void SwitchDrive()
         {
+            Debug.Log("Switching drive... (from : " + _player._drive +")");
             if (_player._drive == Player.Drive.BODY)
             {
                 _player.GetAnimator().SetBool("isRunning", false);

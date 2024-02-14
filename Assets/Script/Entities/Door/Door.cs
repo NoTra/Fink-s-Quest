@@ -54,14 +54,17 @@ namespace FinksQuest.Entities.Door
 
                 _previousOpenState = _isOpen;
 
-                // On cherche tous les Thrower de la salle et on les désactive
-                foreach (Thrower thrower in GameManager.Instance._currentRoom.GetComponentsInChildren<Thrower>())
+                if (GameManager.Instance._currentRoom != null)
                 {
-                    thrower.isActivated = false;
-                    thrower.DestroyAllProjectiles();
-                }
+                    // On cherche tous les Thrower de la salle et on les désactive
+                    foreach (Thrower thrower in GameManager.Instance._currentRoom.GetComponentsInChildren<Thrower>())
+                    {
+                        thrower.isActivated = false;
+                        thrower.DestroyAllProjectiles();
+                    }
 
-                _room._isResolved = true;
+                    _room._isResolved = true;
+                }
             }
         }
 
