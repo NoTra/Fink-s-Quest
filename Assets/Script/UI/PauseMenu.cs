@@ -39,6 +39,11 @@ public class PauseMenu : MonoBehaviour
             return;
         }
 
+        TogglePause();
+    }
+
+    public void TogglePause()
+    {
         if (GameManager.Instance.paused)
         {
             OnResume();
@@ -87,7 +92,7 @@ public class PauseMenu : MonoBehaviour
         Debug.Log("Switch action map (player)");
 
         // On change le schéma d'input pour le joueur
-        _playerInput.SwitchCurrentActionMap(_lastMapActionName);
+        _playerInput.SwitchCurrentActionMap("Player");
 
         // GameManager.Instance._currentUIDocument = null;
 

@@ -12,7 +12,6 @@ namespace FinksQuest.Animation
             float clampedY = Mathf.Clamp(scaledY, -0.2696f, -0.2f);
 
             transform.localPosition = new Vector3(0f, clampedY, 0f);
-        
         }
     }
 }

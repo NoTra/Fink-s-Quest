@@ -3,7 +3,6 @@ using UnityEngine;
 
 using FinksQuest.Core;
 using FinksQuest.UI;
-using UnityEngine.UI;
 
 namespace FinksQuest.Entities.Transition
 {
@@ -33,8 +32,6 @@ namespace FinksQuest.Entities.Transition
         private UnityEngine.Camera _mainCamera;
 
         [SerializeField] AnimationCurve _transitionCurve = AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f);
-
-        [SerializeField] private Animator _transitionAnimator;
 
         private void Awake()
         {
@@ -99,7 +96,7 @@ namespace FinksQuest.Entities.Transition
             _playerAnimator.SetBool("isRunning", true);
 
             // Début transition
-            StartCoroutine(StartRoomTransition());
+            StartCoroutine(UIManager.Instance.StartRoomTransition());
 
             while (elapsedTime < duration)
             {
@@ -139,19 +136,7 @@ namespace FinksQuest.Entities.Transition
             yield return null;
 
             // Fin transition
-            StartCoroutine(EndRoomTransition());
-        }
-
-        IEnumerator StartRoomTransition()
-        {
-            _transitionAnimator.SetTrigger("StartTransition");
-            yield return null;
-        }
-
-        IEnumerator EndRoomTransition()
-        {
-            _transitionAnimator.SetTrigger("EndTransition");
-            yield return null;
+            StartCoroutine(UIManager.Instance.EndRoomTransition());
         }
     }
 }

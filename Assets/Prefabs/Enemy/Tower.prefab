@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 785536180087872861}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.2696, z: 0}
+  m_LocalPosition: {x: 0, y: -0.331, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -145,7 +145,7 @@ Transform:
   m_GameObject: {fileID: 5600129738262548555}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.243, z: 0}
+  m_LocalPosition: {x: 0, y: -0.376, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -167,7 +167,7 @@ MonoBehaviour:
   _projectile: {fileID: 3895808369879278798, guid: 21c051daa6c26ef439c2c99488329ec8,
     type: 3}
   _throwStrength: 2
-  _timeBetweenThrows: 0.5
+  _timeBetweenThrows: 1.2
   _damage: 1
   Ball: {fileID: 785536180087872861}
   _projectiles: []
@@ -295,8 +295,8 @@ Transform:
   m_GameObject: {fileID: 7775349601874397527}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.7899606, y: 1.536, z: 0.4164238}
-  m_LocalScale: {x: 2.9092, y: 2.1597319, z: 2.9092}
+  m_LocalPosition: {x: 1.7899606, y: 1.598, z: 0.4164238}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3167826980336415050}
@@ -344,8 +344,8 @@ Transform:
   m_GameObject: {fileID: 8835581344986713118}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.4279, z: 0}
-  m_LocalScale: {x: 0.12, y: 0.21412778, z: 0.12}
+  m_LocalPosition: {x: 0, y: -0.4684, z: 0}
+  m_LocalScale: {x: 0.12, y: 0.13318747, z: 0.12}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 63511952052499770}

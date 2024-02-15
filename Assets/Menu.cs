@@ -28,19 +28,26 @@ namespace FinksQuest
 
         private void Awake()
         {
-            _currentControlScheme = _playerInput.currentControlScheme;
+            if (_playerInput != null)
+            {
+                _currentControlScheme = _playerInput.currentControlScheme;
+            }
 
             _audioSource = GetComponent<AudioSource>();
-            // Sound
-            float masterVolume = GetVolume("MasterVolume");
-            float musicVolume = GetVolume("Master/MusicVolume");
-            float soundVolume = GetVolume("Master/SoundVolume");
-            float interfaceVolume = GetVolume("Master/InterfaceVolume");
 
-            _masterVolumeSlider.value = ConvertRealValueToSlider(masterVolume);
-            _musicVolumeSlider.value = ConvertRealValueToSlider(musicVolume);
-            _soundVolumeSlider.value = ConvertRealValueToSlider(soundVolume);
-            _interfaceVolumeSlider.value = ConvertRealValueToSlider(interfaceVolume);
+            if (_audioMixer != null)
+            {
+                // Sound
+                float masterVolume = GetVolume("MasterVolume");
+                float musicVolume = GetVolume("Master/MusicVolume");
+                float soundVolume = GetVolume("Master/SoundVolume");
+                float interfaceVolume = GetVolume("Master/InterfaceVolume");
+
+                _masterVolumeSlider.value = ConvertRealValueToSlider(masterVolume);
+                _musicVolumeSlider.value = ConvertRealValueToSlider(musicVolume);
+                _soundVolumeSlider.value = ConvertRealValueToSlider(soundVolume);
+                _interfaceVolumeSlider.value = ConvertRealValueToSlider(interfaceVolume);
+            }
 
             // Set if the application is in fullscreen
             _isFullscreen = Screen.fullScreen;
@@ -48,12 +55,17 @@ namespace FinksQuest
 
         private void Update()
         {
-            _currentControlScheme = _playerInput.currentControlScheme;
+            // _currentControlScheme = _playerInput.currentControlScheme;
         }
 
         public void NewGame()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            SceneManager.LoadScene("DUNGEON");
+        }
+
+        public void MainMenu()
+        {
+            SceneManager.LoadScene("START_MENU");
         }
 
         public void Quit()

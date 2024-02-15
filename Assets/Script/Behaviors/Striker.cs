@@ -73,7 +73,7 @@ namespace FinksQuest.Behavior
 
                     if (hitted != null && !hitted._isInvincible)
                     {
-                        hitted.Hit(transform.position, _strikeStrength, _damage);
+                        hitted.Hit(transform.position, _strikeStrength, _damage, gameObject);
                     }
 
                     if (hitted == null || hitted._hitSound == null)

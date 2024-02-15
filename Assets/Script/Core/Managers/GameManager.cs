@@ -16,14 +16,10 @@ namespace FinksQuest.Core
 
         public AudioManager _audioManager;
 
-        [SerializeField] private UIDocument _startMenu;
-        [SerializeField] private UIDocument _pauseMenu;
-        [SerializeField] private UIDocument _gameOverMenu;
-
-        [HideInInspector] public UIDocument _currentUIDocument;
-
         public RectTransform _dialogPanel;
         public TextMeshProUGUI _textDialog;
+
+        public UIManager UIManager;
 
         // Singleton
         private void Awake()
@@ -35,22 +31,16 @@ namespace FinksQuest.Core
 
             if (PlayerPrefs.HasKey("PlayerDevice"))
             {
-                Player._playerInput.SwitchCurrentControlScheme(
-                    PlayerPrefs.GetString("PlayerDevice")
-                    );
+                Player._playerInput.SwitchCurrentControlScheme(PlayerPrefs.GetString("PlayerDevice"));
             }
 
             if (_currentRoom == null)
             {
-                _currentUIDocument = _startMenu;
-
                 // Disable all action maps except UI
                 Player._playerInput.SwitchCurrentActionMap("UI");
             }
             else
             {
-                Debug.Log("Current room is not null, we activate player map");
-
                 // Disable all action maps except Player
                 Player._playerInput.SwitchCurrentActionMap("Player");
             }

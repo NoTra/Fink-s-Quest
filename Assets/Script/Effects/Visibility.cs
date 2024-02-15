@@ -7,7 +7,7 @@ namespace FinksQuest.Effects
 {
     public class Visibility : MonoBehaviour
     {
-        [SerializeField] bool isVisibleForSoul;
+        [SerializeField] bool _isVisibleForSoul;
         MeshRenderer _meshRenderer;
         BoxCollider _boxCollider;
 
@@ -17,8 +17,8 @@ namespace FinksQuest.Effects
         {
             // GameManager.Instance._playerController.OnSwitchDriveEvent += OnSwitchDrive;
 
-            /*_meshRenderer = GetComponent<MeshRenderer>();
-            _boxCollider = GetComponent<BoxCollider>();*/
+            _meshRenderer = GetComponent<MeshRenderer>();
+            _boxCollider = GetComponent<BoxCollider>();
         }
 
         private void OnEnable()
@@ -34,17 +34,23 @@ namespace FinksQuest.Effects
         // Start is called before the first frame update
         void Start()
         {
+            Debug.Log("Visibility Start for : " + gameObject.name);
             SwitchVisibility();
         }
 
         private void SwitchVisibility()
         {
+            Debug.Log("GameManager.Instance.Player.GetDrive() : " + GameManager.Instance.Player.GetDrive() + " | _isVisibleForSoul : " + _isVisibleForSoul);
             if (GameManager.Instance.Player == null)
+            {
+                Debug.LogError("Player is null");
                 return;
+            }
+                
 
             if (GameManager.Instance.Player.GetDrive() == Player.Drive.SOUL)
             {
-                if (isVisibleForSoul)
+                if (_isVisibleForSoul)
                 {
                     // Activate _meshRenderer && _boxCollider
                     if (_meshRenderer != null)
@@ -62,7 +68,7 @@ namespace FinksQuest.Effects
             }
             else
             {
-                if (isVisibleForSoul)
+                if (_isVisibleForSoul)
                 {
                     if (_meshRenderer != null)
                         _meshRenderer.enabled = false;

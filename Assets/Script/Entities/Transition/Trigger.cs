@@ -10,7 +10,7 @@ namespace FinksQuest.Entities.Transition
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Trigger enter on pressure plate");
+            Debug.Log("Trigger enter on pressure plate : " + gameObject.name);
             if (other.gameObject.CompareTag("Player"))
             {
                 if (GameManager.Instance.Player.GetDrive() == Player.Drive.BODY)

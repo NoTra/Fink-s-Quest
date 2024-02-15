@@ -34,7 +34,12 @@ namespace FinksQuest.Entities.Enemies
                 // if not invulnerable to this projectile
                 if (!_invulnerableTag.Contains(other.tag))
                 {
-                    hittable.Hit(transform.position, _throwStrength, _damage);
+                    if (hittable._isInvincible)
+                    {
+                        return;
+                    }
+
+                    hittable.Hit(transform.position, _throwStrength, _damage, gameObject);
                 }
 
                 Debug.Log("Play impact sound");

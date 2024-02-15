@@ -9,8 +9,6 @@ public class ShowInputInfo : MonoBehaviour
 {
     [SerializeField] private PlayerInput _playerInput;
 
-    [SerializeField] private MainMenu _mainMenu;
-
     [SerializeField] private TextMeshProUGUI _map;
     [SerializeField] private TextMeshProUGUI _device;
     [SerializeField] private TextMeshProUGUI _debugInput;

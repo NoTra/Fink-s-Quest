@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 using FinksQuest.Core;
+using Unity.VisualScripting;
 
 namespace FinksQuest.Entities.Camera
 {
@@ -162,13 +163,13 @@ namespace FinksQuest.Entities.Camera
             _camera.transform.position = GetConstrainedCameraPosition(GameManager.Instance.Player.GetRigidbody().transform.position);
         }
 
-        public IEnumerator MoveCameraToLocation(Vector3 location)
+        public IEnumerator MoveCameraToLocation(Vector3 location, bool noConstraint = false)
         {
             float elapsedTime = 0f;
             float duration = 1f;
 
             Vector3 start = transform.position;
-            Vector3 end = GetConstrainedCameraPosition(location);
+            Vector3 end = (!noConstraint) ? GetConstrainedCameraPosition(location) : new Vector3(location.x, transform.position.y, location.z);
 
             Debug.Log("Moving camera to location : " + end);
 

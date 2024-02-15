@@ -47,6 +47,16 @@ namespace FinksQuest.Behavior
         // Throw a projectile at the player position
         private void ThrowProjectile()
         {
+            if (_target == null)
+            {
+                return;
+            }
+
+            if (_target.GetComponent<Hittable>()._currentHP == 0)
+            {
+                return;
+            }
+
             Vector3 startPosition = transform.position;
             Vector3 targetPosition = _target.transform.position;
 

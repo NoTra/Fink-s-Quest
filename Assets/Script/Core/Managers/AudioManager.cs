@@ -18,6 +18,7 @@ namespace FinksQuest.Core
         public AudioClip _laserShotSound;
         public AudioClip _laserImpactSound;
         public AudioClip _roomClearedSound;
+        public AudioClip _lightOnSound;
 
         public AudioSource _audioSource;
 

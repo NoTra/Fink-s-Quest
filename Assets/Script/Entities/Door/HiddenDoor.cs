@@ -2,13 +2,15 @@ using System.Collections;
 using UnityEngine;
 
 using FinksQuest.Core;
+using System.Runtime.InteropServices;
 
 namespace FinksQuest.Entities.Door
 {
     public class HiddenDoor : Behavior.Openable
     {
         float _transitionSpeed = 3f;
-        [SerializeField] AudioSource _audioSource;
+        [SerializeField] private AudioSource _audioSource;
+        [SerializeField] private Statue _statue;
 
         // Start is called before the first frame update
         void Start()
@@ -45,8 +47,6 @@ namespace FinksQuest.Entities.Door
 
             currentRoom._isResolved = true;
 
-
-
             GameManager.Instance.Player.GetRigidbody().velocity = Vector3.zero;
             GameManager.Instance.Player._canGrab = false;
             GameManager.Instance.Player._canMove = false;
@@ -78,10 +78,39 @@ namespace FinksQuest.Entities.Door
                 yield return null;
             }
 
+            // Wait for sound to finish
+            yield return new WaitForSeconds(2f);
+
             // Play sound
             _audioSource.PlayOneShot(AudioManager.Instance._secretFoundSound);
+
+            Debug.Log("Statue name : " + _statue.name);
+            // On déplace la caméra à la statue
+            yield return StartCoroutine(cameraMovement.MoveCameraToLocation(_statue.transform.position, true));
+
+            // On allume la lumière de la statue
+            var lightIntensity = _statue._light.intensity;
+            _statue._light.intensity = 0f;
+
+            _statue._light.gameObject.SetActive(true);
+
+            // Play sound of light on
+            _audioSource.PlayOneShot(AudioManager.Instance._lightOnSound);
+
+            float elapsedTimeStatue = 0f;
+            float durationStatue = 1f;
+            while (elapsedTimeStatue < durationStatue)
+            {
+                _statue._light.intensity = Mathf.Lerp(0f, lightIntensity, elapsedTimeStatue / durationStatue);
+                elapsedTimeStatue += Time.deltaTime;
+                yield return null;
+            }
+
+            // Wait 1f
+            yield return new WaitForSeconds(1f);
+
             // Wait for sound to finish
-            yield return new WaitForSeconds(AudioManager.Instance._secretFoundSound.length - 1f);
+            // yield return new WaitForSeconds(AudioManager.Instance._secretFoundSound.length - 1f);
 
             // We go back to previous position
             yield return StartCoroutine(cameraMovement.MoveCameraToLocation(currentPosition));

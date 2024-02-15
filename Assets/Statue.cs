@@ -9,12 +9,12 @@ namespace FinksQuest
     public class Statue : Activable
     {
         [SerializeField] private HiddenDoor _hiddenDoor;
-        [SerializeField] private Light _light;
+        public Light _light;
 
         // Update is called once per frame
         void Update()
         {
-            if (_hiddenDoor._isOpen)
+            /*if (_hiddenDoor._isOpen)
             {
                 _light.gameObject.SetActive(true);
                 _isActive = true;
@@ -23,7 +23,7 @@ namespace FinksQuest
             {
                 _light.gameObject.SetActive(false);
                 _isActive = false;
-            }
+            }*/
         }
     }
 }
