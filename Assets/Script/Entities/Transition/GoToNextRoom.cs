@@ -93,7 +93,7 @@ namespace FinksQuest.Entities.Transition
 
             // On désactive le collider du joueur durant la transition
             _playerRigidbody.GetComponent<Collider>().enabled = false;
-            _playerAnimator.SetBool("isRunning", true);
+            // _playerAnimator.SetBool("isRunning", true);
 
             // Début transition
             StartCoroutine(UIManager.Instance.StartRoomTransition());
@@ -111,15 +111,17 @@ namespace FinksQuest.Entities.Transition
                 yield return null;
             }
 
+            
+
+            GameManager.Instance._currentRoom = _nextRoom;
+            _nextRoom.GetComponent<Room>().OnLeaveRoom();
+
             // On réactive les triggers quand la transition est terminée
             _mirrorTrigger.SetActive(true);
             _playerRigidbody.GetComponent<Collider>().enabled = true;
             _player._canMove = true;
             _player._canGrab = true;
             _playerAnimator.SetBool("isRunning", false);
-
-            GameManager.Instance._currentRoom = _nextRoom;
-            _nextRoom.GetComponent<Room>().OnLeaveRoom();
 
             // Activation du dialog si présent
             DialogBox dialogBox = _nextRoom.GetComponent<DialogBox>();

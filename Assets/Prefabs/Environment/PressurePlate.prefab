@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isActive: 0
-  _emitterIntensityOff: 0
+  _emitterIntensityOff: -10
   _emitterIntensityOn: 10
   _transitionSpeed: 0.1
 --- !u!65 &4977754715321745927
@@ -251,4 +251,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d833e906875c34a81ef20d1916b71e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isVisibleForSoul: 0
+  _isVisibleForSoul: 0

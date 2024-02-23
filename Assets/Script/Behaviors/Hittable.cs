@@ -6,13 +6,12 @@ using UnityEngine.UI;
 using FinksQuest.Core;
 using FinksQuest.Entities.Enemies;
 using System.Linq;
-using System;
 
 namespace FinksQuest.Behavior
 {
     public class Hittable : MonoBehaviour
     {
-        [SerializeField] float _maxHP = 3f;
+        [SerializeField] public float _maxHP = 3f;
         [SerializeField] public float _currentHP = 3f;
 
         public bool _isInvincible = false;
@@ -35,6 +34,11 @@ namespace FinksQuest.Behavior
         // Link to HP Slider
         public Slider _healthBar;
 
+        private List<List<Material>> _defaultMaterialsByRenderer = new();
+        private List<Renderer> _allRenderers = new();
+
+        [SerializeField] private GameObject heart;
+
         private void Awake()
         {
             if (_healthBar != null)
@@ -50,27 +54,24 @@ namespace FinksQuest.Behavior
             _audioSource = GetComponent<AudioSource>();
 
             _currentHP = _maxHP;
+
+            _allRenderers.Add(_renderer);
+            var everyRenderers = GetComponentsInChildren<Renderer>();
+            foreach (Renderer renderer in everyRenderers)
+            {
+                // Ignore the trail renderer
+                if (renderer is TrailRenderer)
+                {
+                    continue;
+                }
+                _defaultMaterialsByRenderer.Add(renderer.materials.ToList<Material>());
+                _allRenderers.Add(renderer);
+            }
         }
 
-        public IEnumerator FlashRed()
+        public IEnumerator FlashInvisibility()
         {
             _isInvincible = true;
-
-            /*
-            // Stocker les matériaux d'origine dans une liste
-            List<Material> defaultMaterials = _renderer.materials.ToList<Material>();
-
-            // Créer une liste pour stocker les matériaux modifiés
-            List<Material> coloredMaterials = new();
-
-            // Cloner les matériaux pour éviter de modifier les originaux
-            foreach (Material material in defaultMaterials)
-            {
-                var coloredMaterial = new Material(material);
-                coloredMaterials.Add(coloredMaterial);
-                coloredMaterial.color = _targetColor; // Modifier la couleur pour le clignotement
-            }
-            */
 
             List<Renderer> allRenderers = new() { _renderer };
             var everyRenderers = GetComponentsInChildren<Renderer>();
@@ -85,43 +86,76 @@ namespace FinksQuest.Behavior
                 allRenderers.Add(renderer);
             }
 
-            // allRenderers.AddRange(GetComponentsInChildren<Renderer>());
-
             float elapsedTime = 0f;
             while (elapsedTime < _invincibilityDuration)
             {
                 foreach (Renderer renderer in allRenderers)
                 {
+                    if (renderer == null)
+                    {
+                        continue;
+                    }
+
                     renderer.enabled = false;
-                    // Change color to red
-                    // _renderer.materials = coloredMaterials.ToArray();
                 }
-                // _renderer.enabled = false;
-                // Change color to red
-                // _renderer.materials = coloredMaterials.ToArray();
                 yield return new WaitForSeconds(0.05f);
 
-                // _renderer.enabled = true;
                 foreach (Renderer renderer in allRenderers)
                 {
+                    if (renderer == null)
+                    {
+                        continue;
+                    }
+
                     renderer.enabled = true;
                 }
                 // Change color to original color
-                // _renderer.materials = defaultMaterials.ToArray();
                 yield return new WaitForSeconds(0.05f);
 
                 elapsedTime += 0.1f;
             }
-            /*
-            // Change color to original color
-            _renderer.materials = defaultMaterials.ToArray();
-            */
+
             foreach (Renderer renderer in allRenderers)
             {
+                if (renderer == null)
+                {
+                    continue;
+                }
                 renderer.enabled = true;
             }
 
             _isInvincible = false;
+        }
+
+        public IEnumerator FlashRed()
+        {
+            float elapsedTime = 0f;
+            while (elapsedTime < _invincibilityDuration)
+            {
+                foreach (Renderer renderer in _allRenderers)
+                {
+                    // Change color to red
+                    renderer.materials = renderer.materials.Select(material => new Material(material) { color = _targetColor }).ToArray();
+                }
+                
+                yield return new WaitForSeconds(0.05f);
+
+                foreach (Renderer renderer in _allRenderers)
+                {
+                    renderer.materials = _defaultMaterialsByRenderer[_allRenderers.IndexOf(renderer)].ToArray();
+                }
+                
+                yield return new WaitForSeconds(0.05f);
+
+                elapsedTime += 0.1f;
+
+                yield return null;
+            }
+            
+            foreach (Renderer renderer in _allRenderers)
+            {
+                renderer.materials = _defaultMaterialsByRenderer[_allRenderers.IndexOf(renderer)].ToArray();
+            }
         }
 
         /**
@@ -169,9 +203,7 @@ namespace FinksQuest.Behavior
                         projectile._thrower.DestroyAllProjectiles(false);
                     }
 
-                    Debug.Log("Player died");
                     // Restart the level
-                    // GameManager.Instance.RestartLevel();
                     StartCoroutine(PlayerDeath());
                 }
                 else
@@ -180,6 +212,12 @@ namespace FinksQuest.Behavior
                     {
                         // Remove the skeleton from the room
                         GameManager.Instance._currentRoom.GetComponent<Room>().RemoveSkeleton(GetComponent<Skeleton>());
+
+                        // Random 50% chance to drop a heart
+                        if (Random.Range(0, 2) == 0)
+                        {
+                            Instantiate(heart, transform.position, Quaternion.identity);
+                        }
                     }
 
                     Destroy(gameObject);
@@ -200,7 +238,13 @@ namespace FinksQuest.Behavior
                 _audioSource.PlayOneShot(_hitSound);
             }
 
-            StartCoroutine(FlashRed());
+            if (gameObject.CompareTag("Player"))
+            {
+                StartCoroutine(FlashInvisibility());
+            } else
+            {
+                StartCoroutine(FlashRed());
+            }
 
             // Make the target move back
             StartCoroutine(MoveBack(strikerPosition, strikerStrength));
@@ -208,6 +252,12 @@ namespace FinksQuest.Behavior
 
         private IEnumerator PlayerDeath()
         {
+            Time.timeScale = 0.5f;
+            GameManager.Instance.Player.GetRigidbody().velocity = Vector3.zero;
+            GameManager.Instance.Player._canMove = false;
+            GameManager.Instance.Player._canStrike = false;
+            GameManager.Instance.Player._playerInput.enabled = false;
+
             GameManager.Instance.Player._playerBodyAnimator.SetTrigger("Death");
 
             // Wait for 2s
@@ -220,7 +270,10 @@ namespace FinksQuest.Behavior
 
             // StartCoroutine(UIManager.Instance.EndRoomTransition());
 
+            GameManager.Instance.Player._playerInput.enabled = true;
             UIManager.Instance.DisplayGameOverScreen();
+
+            Time.timeScale = 1f;
 
             yield return null;
         }

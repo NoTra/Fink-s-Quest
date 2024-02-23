@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace FinksQuest.Interactible
@@ -123,7 +121,7 @@ namespace FinksQuest.Interactible
         private IEnumerator IsStillOnPressurePlate()
         {
             // Wait half a second
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.4f);
 
             Vector3 boxSize = transform.localScale * 0.5f;
 

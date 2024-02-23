@@ -10,7 +10,7 @@ namespace FinksQuest.Behavior
         public bool _isStriking = false;
         [SerializeField] private float _strikeDuration = 0.2f;
         public float _strikeRange = 0.5f;
-        [SerializeField] private float _timeBetweenStrikes = 1f;
+        [SerializeField] private float _timeBetweenStrikes = 0f;
         [SerializeField] private AnimationCurve _strikeCurve;
         public float _strikeStrength = 10f;
         [SerializeField] private float _strikeStartAngle = 90f;
@@ -24,7 +24,7 @@ namespace FinksQuest.Behavior
         [SerializeField] private AudioSource _audioSource;
 
         // Layer to exclude from the raycast
-        public LayerMask _layerToExclude;
+        public string[] _layersToExclude;
 
         private bool _hitSomething = false;
 
@@ -66,10 +66,14 @@ namespace FinksQuest.Behavior
                 // On draw un ray partant de la position du joueur de longueur 1, commençant à 45° sur la droite et lui faire faire une rotation à 180° vers la gauche
                 Debug.DrawRay(origin, eulerAngle * transform.forward * _strikeRange, Color.red);
 
-                RaycastHit hit;
-                if (Physics.Raycast(origin, eulerAngle * transform.forward, out hit, _strikeRange, ~_layerToExclude))
+                int layerMask = LayerMask.GetMask(_layersToExclude);
+
+                if (Physics.Raycast(origin, eulerAngle * transform.forward, out RaycastHit hit, _strikeRange, ~layerMask))
                 {
                     Hittable hitted = hit.collider.GetComponent<Hittable>();
+
+                    // Debug.Log the hitted Layers
+                    Debug.Log(hit.collider.gameObject.layer);
 
                     if (hitted != null && !hitted._isInvincible)
                     {

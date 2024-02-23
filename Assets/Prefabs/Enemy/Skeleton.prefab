@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8581657769440340741}
   - component: {fileID: 3151183403222907053}
   - component: {fileID: 2886368001083674825}
-  m_Layer: 8
+  m_Layer: 17
   m_Name: Skeleton
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ NavMeshAgent:
   m_Acceleration: 3
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0.5
+  m_StoppingDistance: 1.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -133,6 +133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 6692065794475080266}
   _timeBetweenStrikes: 1
+  _startingPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &3151183403222907053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,7 +160,9 @@ MonoBehaviour:
   - {fileID: 7226888052703040409, guid: 4d7dfb775abda8c4883a9d3fb9157881, type: 3}
   - {fileID: 100004, guid: 5e7e90f3f2bf9544d93f41c97d6a99dc, type: 3}
   _targetColor: {r: 1, g: 0, b: 0, a: 1}
+  _invincibilityDuration: 0.5
   _healthBar: {fileID: 0}
+  heart: {fileID: 252640889151935021, guid: adc94c0894e8a3243abd8ceaf8697166, type: 3}
 --- !u!82 &2886368001083674825
 AudioSource:
   m_ObjectHideFlags: 0
@@ -650,8 +653,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isStriking: 0
   _strikeDuration: 0.3
-  _strikeRange: 0.9
-  _timeBetweenStrikes: 2
+  _strikeRange: 0.95
+  _timeBetweenStrikes: 0
   _strikeCurve:
     serializedVersion: 2
     m_Curve:
@@ -684,9 +687,8 @@ MonoBehaviour:
     type: 3}
   _destroyEffect: {fileID: 0}
   _audioSource: {fileID: 2886368001083674825}
-  _layerToExclude:
-    serializedVersion: 2
-    m_Bits: 1024
+  _layersToExclude:
+  - Skeleton
   _targetTag: Player
 --- !u!4 &6692065794482525588 stripped
 Transform:

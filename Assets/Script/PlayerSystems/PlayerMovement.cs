@@ -11,10 +11,6 @@ namespace FinksQuest.PlayerSystems
             base.Awake();
         }
 
-        private void Start()
-        {
-        }
-
         private void Update()
         {
             // On trace un raycast devant le joueur pour détecter les collisions
@@ -22,6 +18,11 @@ namespace FinksQuest.PlayerSystems
             if (Physics.Raycast(_player.GetRigidbody().transform.position, _player.GetRigidbody().transform.forward, out hit, 0.2f, LayerMask.GetMask("Wall")))
             {
                 _player.GetRigidbody().velocity = Vector3.zero;
+            }
+
+            if (_player._canMove == false)
+            {
+                return;
             }
 
             // On récupère l'input du joueur

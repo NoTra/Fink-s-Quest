@@ -93,6 +93,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: -305091885687274788, guid: a6f5e2cc850232d4e8ea96b86059418a,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6ca20f1895850b342a093fae3958a6f1, type: 2}
     - target: {fileID: 919132149155446097, guid: a6f5e2cc850232d4e8ea96b86059418a,
         type: 3}
       propertyPath: m_Name
@@ -108,6 +113,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 2012963514211074044, guid: a6f5e2cc850232d4e8ea96b86059418a,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 482c36c67e5694d40b469151565ee835, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -170,8 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isOpen: 0
   _previousOpenState: 0
-  _activableButtons:
-  - {fileID: 0}
+  _activableButtons: []
   _enemiesToKill: []
   _meshRenderer: {fileID: 1404337100274716768}
   _color: {r: 0, g: 0.9706273, b: 1, a: 1}
@@ -188,7 +197,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 2276007847067458237, guid: 2fb847531c26ff7419c1847df5570f9a,
     type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
   Loop: 0

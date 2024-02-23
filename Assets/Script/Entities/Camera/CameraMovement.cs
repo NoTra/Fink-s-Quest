@@ -171,8 +171,6 @@ namespace FinksQuest.Entities.Camera
             Vector3 start = transform.position;
             Vector3 end = (!noConstraint) ? GetConstrainedCameraPosition(location) : new Vector3(location.x, transform.position.y, location.z);
 
-            Debug.Log("Moving camera to location : " + end);
-
             while (elapsedTime < duration)
             {
                 transform.position = Vector3.Lerp(start, end, (elapsedTime / duration));

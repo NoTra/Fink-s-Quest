@@ -6,15 +6,17 @@ using System.Text.RegularExpressions;
 using System.Text;
 
 using FinksQuest.Core;
+using FinksQuest.Entities.Enemies;
 
 namespace FinksQuest.UI
 {
     public class DialogBox : MonoBehaviour
     {
         [TextArea(3, 10)] public string _message;
-        [SerializeField] private float _displaySpeed = 3f;
+        // [SerializeField] private float _displaySpeed = 3f;
         [SerializeField] private float _panelSpeed = 0.3f;
         [SerializeField] AnimationCurve _panelAnimationCurve = AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f);
+        [SerializeField] private bool _deactivateDialogBoxOnEnd = false;
 
 
         private RectTransform _dialogPanel;
@@ -25,8 +27,11 @@ namespace FinksQuest.UI
         private bool _panelActivated = false;
         private bool _animationFinished = false;
         [SerializeField] private bool _freezeTime;
+        [SerializeField] private float _durationByLetter = 0.01f;
 
         private AudioSource _audioSource;
+
+        private Skeleton[] _skeletons;
 
         private void Awake()
         {
@@ -37,8 +42,16 @@ namespace FinksQuest.UI
 
         private void OnEnable()
         {
-            if (_message != "")
+            if (_message != "" && PlayerPrefs.GetInt("DialogBox") == 0)
             {
+                // Find objects of Tag Enemy in the currentRoom
+                _skeletons = GameManager.Instance._currentRoom.GetComponent<Room>().GetAllSkeletons();
+
+                foreach (Skeleton skeleton in _skeletons)
+                {
+                    skeleton.enabled = false;
+                }
+
                 // On désactive les controles du joueur
                 GameManager.Instance.Player._playerInput.SwitchCurrentActionMap("UI");
 
@@ -57,7 +70,7 @@ namespace FinksQuest.UI
 
                 if (_dialogPanel != null)
                 {
-                    _dialogPanel.anchoredPosition = new Vector2(0f, -_dialogPanel.rect.height);
+                    // _dialogPanel.anchoredPosition = new Vector2(0f, -_dialogPanel.rect.height);
                     _dialogPanel.gameObject.SetActive(true);
                 }
 
@@ -144,6 +157,17 @@ namespace FinksQuest.UI
                     // Temps de jeu à 1
                     Time.timeScale = 1f;
                 }
+
+                // On réactive les ennemis
+                foreach (Skeleton skeleton in _skeletons)
+                {
+                    skeleton.enabled = true;
+                }
+
+                if (_deactivateDialogBoxOnEnd)
+                {
+                    PlayerPrefs.SetInt("DialogBox", 1);
+                }
             }
         }
 
@@ -152,20 +176,20 @@ namespace FinksQuest.UI
             float elapsedtime = 0f;
 
             // Affichage du panel
-            while (elapsedtime < 0.3f)
+            /*while (elapsedtime < 0.3f)
             {
                 elapsedtime += Time.deltaTime;
                 float newY = Mathf.Lerp(_dialogPanel.anchoredPosition.y, 72f, _panelAnimationCurve.Evaluate(elapsedtime / _panelSpeed));
                 _dialogPanel.anchoredPosition = new Vector2(0f, newY);
 
                 yield return null;
-            }
+            }*/
             _panelActivated = true;
 
             // Affichage du texte
             elapsedtime = 0f;
 
-            float durationByLetter = _displaySpeed / _message.Length;
+            // float durationByLetter = _displaySpeed / _message.Length;
 
             // On joue le son de scroll
             _audioSource.Play();
@@ -207,7 +231,7 @@ namespace FinksQuest.UI
 
                 currentIndex += 1;
 
-                yield return new WaitForSeconds(durationByLetter);
+                yield return new WaitForSeconds(_durationByLetter);
 
                 _audioSource.volume = 1;
 

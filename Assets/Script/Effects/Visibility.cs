@@ -34,13 +34,11 @@ namespace FinksQuest.Effects
         // Start is called before the first frame update
         void Start()
         {
-            Debug.Log("Visibility Start for : " + gameObject.name);
             SwitchVisibility();
         }
 
         private void SwitchVisibility()
         {
-            Debug.Log("GameManager.Instance.Player.GetDrive() : " + GameManager.Instance.Player.GetDrive() + " | _isVisibleForSoul : " + _isVisibleForSoul);
             if (GameManager.Instance.Player == null)
             {
                 Debug.LogError("Player is null");

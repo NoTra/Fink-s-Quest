@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 using FinksQuest.Core;
+using FinksQuest.Behavior;
 
 namespace FinksQuest.Entities.Enemies
 {
@@ -18,6 +19,8 @@ namespace FinksQuest.Entities.Enemies
         public Vector3 _startingPosition;
         private Room _room;
 
+        private Striker _striker;
+
         void Start()
         {
             _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -27,25 +30,33 @@ namespace FinksQuest.Entities.Enemies
             _startingPosition = transform.position;
             _room = GetComponentInParent<Room>();
             _room.AddSkeleton(this);
+
+            _striker = GetComponentInChildren<Striker>();
         }
 
         void Update()
         {
-            // Skeleton va vers le joueur s'il est dans la même pièce que lui
-            if (_roomGO == GameManager.Instance._currentRoom)// (distance < 3f)
+            // Skeleton va vers le joueur s'il est dans la même pièce que lui et qu'il est en vie
+            if (
+                _roomGO == GameManager.Instance._currentRoom && 
+                GameManager.Instance.Player.GetRigidbody().GetComponent<Hittable>()._currentHP > 0
+            )
             {
-                _navMeshAgent.SetDestination(_player.transform.position);
-                _animator.SetBool("isWalking", true);
-
-                Debug.DrawRay(transform.position, transform.forward * 0.2f, Color.red);
-
-                float elapsedTime = Time.time - _timeSinceLastStrike;
-
-                // Chaque seconde on frappe
-                if (elapsedTime > _timeBetweenStrikes)
+                // Déplacement vers le joueur
+                if (Vector3.Distance(transform.position, _player.transform.position) > 1.2f)
                 {
-                    _animator.SetTrigger("Strike");
+                    _navMeshAgent.SetDestination(_player.transform.position);
+                    _animator.SetBool("isWalking", true);
                 }
+                else
+                {
+                    if (!_striker._isStriking)
+                    {
+                        _animator.SetTrigger("Strike");
+                    }
+                }
+
+                transform.LookAt(new Vector3(_player.transform.position.x, transform.position.y, _player.transform.position.z));
             }
             else
             {

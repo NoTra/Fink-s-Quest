@@ -29,7 +29,6 @@ namespace FinksQuest.PlayerSystems
 
         public void SwitchDrive()
         {
-            Debug.Log("Switching drive... (from : " + _player._drive +")");
             if (_player._drive == Player.Drive.BODY)
             {
                 _player.GetAnimator().SetBool("isRunning", false);
@@ -72,6 +71,7 @@ namespace FinksQuest.PlayerSystems
 
                 if (_player._playerSoulRB.gameObject.activeSelf == true)
                 {
+                    Debug.Log("JoinSoulToBody");
                     // The soul goes back to the body
                     StartCoroutine(JoinSoulToBody());
                 }

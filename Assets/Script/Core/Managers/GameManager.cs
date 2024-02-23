@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
 namespace FinksQuest.Core
 {
@@ -44,6 +43,8 @@ namespace FinksQuest.Core
                 // Disable all action maps except Player
                 Player._playerInput.SwitchCurrentActionMap("Player");
             }
+
+            PlayerPrefs.SetInt("DialogBox", 0);
         }
 
         void Start()

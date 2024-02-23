@@ -10,17 +10,14 @@ namespace FinksQuest.Entities.Transition
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Trigger enter on pressure plate : " + gameObject.name);
-            if (other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Soul"))
             {
                 if (GameManager.Instance.Player.GetDrive() == Player.Drive.BODY)
                 {
-                    Debug.Log("Body entered");
                     _isTriggered = true;
                 }
                 else
                 {
-                    Debug.Log("Soul entered");
                     GameManager.Instance.Player.GetComponent<PlayerSwitchDrive>().SwitchDrive();
                 }
             }

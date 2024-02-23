@@ -97,7 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 0743bc962257589439fc5788345a1215,
+    type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -158,12 +159,9 @@ MonoBehaviour:
   paused: 0
   Player: {fileID: 908087360}
   _audioManager: {fileID: 777075701}
-  _startMenu: {fileID: 0}
-  _pauseMenu: {fileID: 0}
-  _gameOverMenu: {fileID: 0}
-  _currentUIDocument: {fileID: 0}
   _dialogPanel: {fileID: 0}
   _textDialog: {fileID: 0}
+  UIManager: {fileID: 0}
 --- !u!4 &78493971
 Transform:
   m_ObjectHideFlags: 0
@@ -2011,13 +2009,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 573582545}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 393f458ec0686ce48811a25c2bac0b9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _playerInput: {fileID: 908087362}
-  _mainMenu: {fileID: 0}
   _map: {fileID: 2124788480}
   _device: {fileID: 1562128505}
   _debugInput: {fileID: 0}
@@ -3377,6 +3374,7 @@ MonoBehaviour:
   _laserShotSound: {fileID: 0}
   _laserImpactSound: {fileID: 0}
   _roomClearedSound: {fileID: 0}
+  _lightOnSound: {fileID: 0}
   _audioSource: {fileID: 0}
 --- !u!1001 &793360499
 PrefabInstance:
@@ -3630,7 +3628,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -4193,7 +4191,7 @@ PrefabInstance:
     - target: {fileID: 4922698917416413734, guid: 98d2155c66fc07d44b39cd10e3174a39,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.78
+      value: 7.5299997
       objectReference: {fileID: 0}
     - target: {fileID: 4922698917416413734, guid: 98d2155c66fc07d44b39cd10e3174a39,
         type: 3}
@@ -5058,7 +5056,7 @@ PrefabInstance:
     - target: {fileID: 8483496312777571604, guid: f1ea6d76baefb5549ae8ba87c9b2349d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.245727
+      value: 3.164
       objectReference: {fileID: 0}
     - target: {fileID: 8483496312777571604, guid: f1ea6d76baefb5549ae8ba87c9b2349d,
         type: 3}
@@ -6021,7 +6019,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1490635897
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12461,7 +12459,7 @@ PrefabInstance:
     - target: {fileID: 8483496312777571604, guid: f1ea6d76baefb5549ae8ba87c9b2349d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.499
+      value: 0.58
       objectReference: {fileID: 0}
     - target: {fileID: 8483496312777571604, guid: f1ea6d76baefb5549ae8ba87c9b2349d,
         type: 3}

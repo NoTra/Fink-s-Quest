@@ -64,7 +64,7 @@ namespace FinksQuest.Entities.Enemies
 
         public void DestroySelf(bool showEffects = true)
         {
-            if (showEffects)
+            if (showEffects && _impactParticle != null)
             {
                 // On instancie une particule d'impact
                 GameObject impactParticle = Instantiate(_impactParticle, transform.position, Quaternion.identity);

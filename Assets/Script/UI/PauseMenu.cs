@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 using UnityEngine.Rendering;
 
 using FinksQuest.Core;
@@ -98,7 +97,6 @@ public class PauseMenu : MonoBehaviour
 
         GameManager.Instance.paused = false;
 
-        Debug.Log("Resume... Changement de volume... before : " + Camera.main.GetComponent<Volume>().profile + " -> after : " + _previousVolumeProfile.name);
         Camera.main.GetComponent<Volume>().profile = _previousVolumeProfile;
 
         _menu.SetActive(false);

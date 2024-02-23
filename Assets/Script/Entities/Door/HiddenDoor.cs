@@ -50,6 +50,7 @@ namespace FinksQuest.Entities.Door
             GameManager.Instance.Player.GetRigidbody().velocity = Vector3.zero;
             GameManager.Instance.Player._canGrab = false;
             GameManager.Instance.Player._canMove = false;
+            GameManager.Instance.Player.GetAnimator().SetBool("isRunning", false);
 
             Camera.CameraMovement cameraMovement = UnityEngine.Camera.main.GetComponent<Camera.CameraMovement>();
             cameraMovement._freeMove = true;

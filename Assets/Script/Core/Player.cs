@@ -33,6 +33,7 @@ namespace FinksQuest.Core
         // States & Cooldowns
         public bool _canMove = true;
         public bool _canGrab = true;
+        public bool _canStrike = true;
 
         public bool _isGrabbing = false;
         public bool _isDashing = false;
@@ -74,7 +75,7 @@ namespace FinksQuest.Core
 
         public bool CanDash()
         {
-            return !_isDashing && !_isGrabbing && _canMove && GetDrive() != Player.Drive.SOUL; // !_striker._isStriking
+            return !_isDashing && !_isGrabbing && _canMove && GetDrive() != Drive.SOUL; // !_striker._isStriking
         }
     }
 }

@@ -69,7 +69,7 @@ namespace FinksQuest.PlayerSystems
             // On lance le son de dash
             if (_dashSound != null)
             {
-                GameManager.Instance._audioManager._audioSource.PlayOneShot(_dashSound);
+                GameManager.Instance._audioManager._audioSource.PlayOneShot(_dashSound, 0.1f);
             }
 
             float elapsedTime = 0f;

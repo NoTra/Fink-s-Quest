@@ -84,5 +84,10 @@ namespace FinksQuest.Core
                 tower.DestroyAllProjectiles();
             }
         }
+
+        public Skeleton[] GetAllSkeletons()
+        {
+            return _skeletons.ToArray();
+        }
     }
 }
