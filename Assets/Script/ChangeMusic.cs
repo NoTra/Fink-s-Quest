@@ -48,6 +48,8 @@ namespace FinksQuest
                 yield return null;
             }
 
+            _audioSource.volume = 0f;
+
             Debug.Log("CrossFadeCoroutine volume end : " + _audioSource.volume);
 
             // Changer la musique
@@ -65,6 +67,8 @@ namespace FinksQuest
                 _audioSource.volume = Mathf.Lerp(0f, 1f, _currentTime / 4f);
                 yield return null;
             }
+
+            _audioSource.volume = 1f;
         }
     }
 }

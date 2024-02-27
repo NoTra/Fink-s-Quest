@@ -177,6 +177,8 @@ namespace FinksQuest.Entities.Camera
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
+
+            transform.position = end;
         }
 
         public IEnumerator ShakeCamera(float duration, float magnitude)

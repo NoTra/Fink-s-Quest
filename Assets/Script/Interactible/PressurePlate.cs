@@ -69,6 +69,8 @@ namespace FinksQuest.Interactible
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
+
+            _emitterMaterial.SetColor("_EmissionColor", _startEmissionColor * _emitterIntensityOn);
         }
 
         IEnumerator DimmDown()
@@ -82,6 +84,8 @@ namespace FinksQuest.Interactible
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
+
+            _emitterMaterial.SetColor("_EmissionColor", _startEmissionColor * _emitterIntensityOff);
         }
 
         new public void Deactivate()
@@ -101,12 +105,27 @@ namespace FinksQuest.Interactible
 
         private void OnTriggerEnter(Collider other)
         {
-            Activate();
+            Debug.Log("OnTriggerEnter");
+            // Debug.Log("POUET : " + other.gameObject.layer.ToString());
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player") ||
+                other.gameObject.layer == LayerMask.NameToLayer("Ghost") ||
+                other.gameObject.layer == LayerMask.NameToLayer("Grabbable")
+            )
+            {
+                Activate();
+            }
         }
 
         private void OnTriggerStay(Collider other)
         {
-            if (!_isActive)
+            Debug.Log("OnTriggerStay");
+            if (!_isActive &&
+                (
+                other.gameObject.layer == LayerMask.NameToLayer("Player") ||
+                other.gameObject.layer == LayerMask.NameToLayer("Ghost") ||
+                other.gameObject.layer == LayerMask.NameToLayer("Grabbable")
+                )
+            )
             {
                 Activate();
             }
@@ -114,18 +133,43 @@ namespace FinksQuest.Interactible
 
         private void OnTriggerExit(Collider other)
         {
+            Debug.Log("OnTriggerExit");
             // Wait half a second before checking if something is still on the pressure plate
-            StartCoroutine(IsStillOnPressurePlate());
+            // StartCoroutine(IsStillOnPressurePlate());
+
+            var boxCollider = GetComponent<BoxCollider>();
+            var boxSize = boxCollider.bounds.size * 0.5f;
+            // Debug.DrawRay(transform.position, transform.forward * boxCollider.bounds.size.x * 0.5f, Color.red, 1f);
+
+            // Vector3 boxSize = transform.localScale * 0.5f;
+
+            LayerMask layerMask = LayerMask.GetMask("Player", "Ghost", "Grabbable");
+
+            // Check if something is still intersect with BoxCollider
+            if (Physics.OverlapBox(transform.position, boxSize, transform.rotation, layerMask).Length == 0)
+            {
+                
+                Deactivate();
+
+                return;
+            }
+
+            Debug.Log("Something is still on the pressure plate");
+            Debug.Log(Physics.OverlapBox(transform.position, boxSize, transform.rotation, layerMask)[0].name);
+
         }
 
         private IEnumerator IsStillOnPressurePlate()
         {
             // Wait half a second
-            yield return new WaitForSeconds(0.4f);
+            // yield return new WaitForSeconds(0.4f);
 
-            Vector3 boxSize = transform.localScale * 0.5f;
+            var boxCollider = GetComponent<BoxCollider>();
+            var boxSize = boxCollider.bounds.size;
 
-            LayerMask layerMask = LayerMask.GetMask("Player", "Soul", "Grabbable");
+            // Vector3 boxSize = transform.localScale * 0.5f;
+
+            LayerMask layerMask = LayerMask.GetMask("Player", "Ghost", "Grabbable");
 
             // Check if something is still intersect with BoxCollider
             if (Physics.OverlapBox(transform.position, boxSize, transform.rotation, layerMask).Length > 0)

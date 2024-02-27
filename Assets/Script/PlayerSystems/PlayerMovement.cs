@@ -42,21 +42,22 @@ namespace FinksQuest.PlayerSystems
             // On récupère l'input du joueur
             Vector2 moveDirection = _player._playerInput.actions["Move"].ReadValue<Vector2>();
 
-            Vector3 velocity = _player.GetRigidbody().velocity;
+            /*Vector3 velocity = _player.GetRigidbody().velocity;
 
             velocity.x = moveDirection.x * _speed;
             velocity.z = moveDirection.y * _speed;
-            _player.GetRigidbody().velocity = velocity;
+            _player.GetRigidbody().velocity = velocity;*/
 
             // Rotation du joueur en fonction de la direction du movement
             if (moveDirection != Vector2.zero && CanRotate())
             {
                 float angle = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg;
-                _player.GetRigidbody().transform.rotation = Quaternion.Euler(0f, angle, 0f);
+                _player.GetRigidbody().transform.localRotation = Quaternion.Euler(0f, angle, 0f);
             }
 
+            var localPos = _player.GetRigidbody().transform.localPosition;
             // On déplace le joueur
-            _player.GetRigidbody().velocity = new Vector3(moveDirection.x, 0, moveDirection.y) * _speed;
+            _player.GetRigidbody().transform.localPosition = localPos + new Vector3(moveDirection.x, 0, moveDirection.y) * _speed * Time.fixedDeltaTime;
         }
 
         public bool CanRotate()

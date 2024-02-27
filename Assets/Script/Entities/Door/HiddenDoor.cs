@@ -79,6 +79,8 @@ namespace FinksQuest.Entities.Door
                 yield return null;
             }
 
+            transform.position = end;
+
             // Wait for sound to finish
             yield return new WaitForSeconds(2f);
 
@@ -106,6 +108,8 @@ namespace FinksQuest.Entities.Door
                 elapsedTimeStatue += Time.deltaTime;
                 yield return null;
             }
+
+            _statue._light.intensity = lightIntensity;
 
             // Wait 1f
             yield return new WaitForSeconds(1f);

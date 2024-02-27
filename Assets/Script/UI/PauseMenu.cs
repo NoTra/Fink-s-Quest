@@ -56,7 +56,6 @@ public class PauseMenu : MonoBehaviour
     public void OnPause()
     {
         _previousVolumeProfile = Camera.main.GetComponent<Volume>().profile;
-        Debug.Log("Pause... Changement de volume... before : " + _previousVolumeProfile.name + " -> after : " + _menuVolumeProfile.name);
         Camera.main.GetComponent<Volume>().profile = _menuVolumeProfile;
 
         Time.timeScale = 0f;
@@ -91,7 +90,7 @@ public class PauseMenu : MonoBehaviour
         Debug.Log("Switch action map (player)");
 
         // On change le schéma d'input pour le joueur
-        _playerInput.SwitchCurrentActionMap("Player");
+        _playerInput.SwitchCurrentActionMap(_lastMapActionName);
 
         // GameManager.Instance._currentUIDocument = null;
 

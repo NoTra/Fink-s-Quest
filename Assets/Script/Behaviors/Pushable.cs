@@ -26,14 +26,13 @@ namespace FinksQuest.Behavior
             audioSource = crate.gameObject.GetComponent<AudioSource>();
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
         private void OnTriggerStay(Collider collider)
         {
+            if (!collider.CompareTag("Player"))
+            {
+                return;
+            }
+
             Vector2 playerMovement = GameManager.Instance.Player._playerInput.actions["Move"].ReadValue<Vector2>();
 
             // Simplify movement
@@ -47,7 +46,7 @@ namespace FinksQuest.Behavior
             }
 
             if (
-                collider.tag == "Player" && (
+                collider.CompareTag("Player") && (
                     playerMovement.x != 0 && axe.Equals("x") ||
                     playerMovement.y != 0 && axe.Equals("z")
                 )
@@ -134,6 +133,9 @@ namespace FinksQuest.Behavior
 
                 yield return null;
             }
+
+            crate.position = crateStartingPosition + direction * 0.8f;
+            playerRB.position = playerStartingPosition + direction * 0.8f;
 
             GameManager.Instance.Player._canMove = true;
             movingCoroutine = null;

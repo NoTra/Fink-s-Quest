@@ -10183,7 +10183,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &414722411
 Transform:
   m_ObjectHideFlags: 0
@@ -22827,7 +22827,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1048596873
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23580,7 +23580,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraPosition: {x: 0, y: 0, z: 0}
-  _maxZoom: 7
+  _maxZoom: 6
   _isResolved: 0
 --- !u!1001 &1112880403
 PrefabInstance:
@@ -31885,7 +31885,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 0.8
   m_Range: 10
   m_SpotAngle: 30
@@ -38836,7 +38836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraPosition: {x: 0, y: 0, z: 0}
-  _maxZoom: 7
+  _maxZoom: 6
   _isResolved: 0
 --- !u!1 &1736455710
 GameObject:
@@ -44302,7 +44302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraPosition: {x: 0, y: 0, z: 0}
-  _maxZoom: 7
+  _maxZoom: 6
   _isResolved: 0
 --- !u!1001 &1972727891
 PrefabInstance:
@@ -55268,6 +55268,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 487109792174831457, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
         type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 487109792174831457, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
+        type: 3}
       propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
       objectReference: {fileID: 0}
@@ -55303,6 +55308,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 487109792174831457, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
         type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnDash
+      objectReference: {fileID: 0}
+    - target: {fileID: 487109792174831457, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
+        type: 3}
       propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: TogglePause
       objectReference: {fileID: 0}
@@ -55315,6 +55325,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ActionEvents.Array.data[18].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnUngrab
+      objectReference: {fileID: 0}
+    - target: {fileID: 487109792174831457, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: FinksQuest.PlayerSystems.PlayerDash, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 487109792174831457, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
         type: 3}
@@ -55393,6 +55408,21 @@ PrefabInstance:
       objectReference: {fileID: 529931166}
     - target: {fileID: 5069236849614277184, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
         type: 3}
+      propertyPath: m_Interpolate
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069236849614277184, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069236849614277184, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069236849614277184, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
+        type: 3}
       propertyPath: m_IncludeLayers.m_Bits
       value: 4294967295
       objectReference: {fileID: 0}
@@ -55409,7 +55439,7 @@ PrefabInstance:
     - target: {fileID: 6202486231276285875, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.9400024
+      value: 7.6900024
       objectReference: {fileID: 0}
     - target: {fileID: 6202486231276285875, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
         type: 3}
@@ -55491,6 +55521,11 @@ PrefabInstance:
       propertyPath: _deathSounds.Array.data[0]
       value: 
       objectReference: {fileID: 8300000, guid: 0fc665ad496bbe242bfab31f7af697f6, type: 3}
+    - target: {fileID: 7013217541370238348, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
+        type: 3}
+      propertyPath: _isGrabbing
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7031494257569359371, guid: 92234c7cfdaa74c47b3c74e165fb4d9e,
         type: 3}
       propertyPath: m_Layer

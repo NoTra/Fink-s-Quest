@@ -141,6 +141,7 @@ namespace FinksQuest.PlayerSystems
                 yield return null;
             }
 
+            _player._playerSoulLight.intensity = toIntensity;
             _player._playerSoulRB.gameObject.SetActive(false);
 
             _player._canMove = true;
@@ -163,6 +164,8 @@ namespace FinksQuest.PlayerSystems
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
+
+            _player._playerSoulLight.intensity = toIntensity;
         }
     }
 }

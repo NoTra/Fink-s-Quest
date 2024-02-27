@@ -111,7 +111,8 @@ namespace FinksQuest.Entities.Transition
                 yield return null;
             }
 
-            
+            _playerRigidbody.transform.position = playerEndPosition;
+            _playerRigidbody.transform.forward = direction;
 
             GameManager.Instance._currentRoom = _nextRoom;
             _nextRoom.GetComponent<Room>().OnLeaveRoom();

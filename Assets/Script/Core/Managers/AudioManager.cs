@@ -39,11 +39,5 @@ namespace FinksQuest.Core
         {
             _audioSource = GetComponent<AudioSource>();
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
     }
 }

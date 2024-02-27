@@ -59,11 +59,6 @@ namespace FinksQuest
             _isFullscreen = Screen.fullScreen;
         }
 
-        private void Update()
-        {
-            // _currentControlScheme = _playerInput.currentControlScheme;
-        }
-
         public void NewGame()
         {
             SceneManager.LoadScene("DUNGEON");

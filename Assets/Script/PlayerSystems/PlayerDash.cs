@@ -8,7 +8,7 @@ namespace FinksQuest.PlayerSystems
 {
     public class PlayerDash : PlayerSystem
     {
-        [SerializeField] float _dashForce = 1000f; // Ajustez la force du dash selon vos besoins
+        [SerializeField] float _dashForce = 1.2f; // Ajustez la force du dash selon vos besoins
         [SerializeField] float _dashDuration = 0.5f; // Durée du dash en secondes
         [SerializeField] AnimationCurve _dashCurve = AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f);
         [SerializeField] private float _timeBetweenDashes = 1f; // Temps entre chaque dash
@@ -19,21 +19,25 @@ namespace FinksQuest.PlayerSystems
 
         [SerializeField] private TrailRenderer trail;
 
+        private Vector3 _desiredPosition;
+
         public void OnDash(InputAction.CallbackContext context)
         {
             if (context.performed && _player.CanDash())
             {
-                _player._dashCoroutine = StartCoroutine(PerformDash());
+                // On ne fait pas de dash si le joueur a fait un dash il y a moins de _timeBetweenDashes secondes
+                if (Time.time - _lastDashTime >= _timeBetweenDashes)
+                {
+                    _player._dashCoroutine = StartCoroutine(PerformDash());
+                }
             }
         }
 
         IEnumerator PerformDash()
         {
-            // On ne fait pas de dash si le joueur a fait un dash il y a moins de _timeBetweenDashes secondes
-            if (Time.time - _lastDashTime < _timeBetweenDashes)
-            {
-                yield break;
-            }
+            Debug.Log("PerformDash");
+            _player._isDashing = true;
+            _player._canMove = false;
 
             _lastDashTime = Time.time;
 
@@ -47,20 +51,10 @@ namespace FinksQuest.PlayerSystems
             // Stockez la vélocité actuelle du Rigidbody
             Vector3 initialVelocity = _player.GetRigidbody().velocity;
 
-            Vector3 initialRotation = _player.GetRigidbody().transform.rotation.eulerAngles;
+            Vector3 initialRotation = _player.GetRigidbody().transform.localRotation.eulerAngles;
 
             // On prend en compte la move direction du joueur pour le dash
             Vector2 moveDirection = _player._playerInput.actions["Move"].ReadValue<Vector2>();
-
-            Vector3 destination;
-            if (moveDirection == Vector2.zero)
-            {
-                destination = _player.GetRigidbody().transform.position + _player.GetRigidbody().transform.forward * _dashForce;
-            }
-            else
-            {
-                destination = _player.GetRigidbody().transform.position + new Vector3(moveDirection.x, 0f, moveDirection.y) * _dashForce;
-            }
 
             // On instantie un stepPoof
             var stepEffect = Instantiate(_stepEffect, _player.GetRigidbody().transform.position, Quaternion.identity);
@@ -72,37 +66,68 @@ namespace FinksQuest.PlayerSystems
                 GameManager.Instance._audioManager._audioSource.PlayOneShot(_dashSound, 0.1f);
             }
 
-            float elapsedTime = 0f;
+            var startPosition = _player.GetRigidbody().transform.localPosition;
 
-            while (elapsedTime < _dashDuration)
+            Vector3 destination;
+            if (moveDirection == Vector2.zero)
             {
-                // On trace un raycast devant le joueur pour détecter les collisions
-                RaycastHit hit;
-                if (Physics.Raycast(_player.GetRigidbody().transform.position, _player.GetRigidbody().transform.forward, out hit, 0.5f, LayerMask.GetMask("Wall")))
+                destination = _player.GetRigidbody().transform.localPosition + _player.GetRigidbody().transform.forward * _dashForce;
+            }
+            else
+            {
+                destination = _player.GetRigidbody().transform.localPosition + new Vector3(moveDirection.x, 0f, moveDirection.y) * _dashForce;
+            }
+
+            // On trace un raycast devant le joueur pour détecter les collisions
+            if (Physics.Raycast(_player.GetRigidbody().transform.position, _player.GetRigidbody().transform.forward, out RaycastHit hit, _dashForce * 1.1f, LayerMask.GetMask("Wall")))
+            {
+                if (hit.distance > (_dashForce * 0.5f))
                 {
+                    Debug.Log("Hit object : " + hit.collider.gameObject.name);
                     if (_player.GetDrive() == Player.Drive.BODY)
                     {
-                        // StartCoroutine(_hittable.FlashRed());
-
                         // Appliquer la vélocité initiale
                         _player.GetRigidbody().velocity = initialVelocity;
 
                         // On bloque la rotation du joueur pendant le dash
-                        _player.GetRigidbody().transform.rotation = Quaternion.Euler(initialRotation);
+                        _player.GetRigidbody().transform.localRotation = Quaternion.Euler(initialRotation);
                     }
 
-                    break; // Arrêter le dash en cas de collision avec un mur
+                    var direction = new Vector3(hit.point.x, _player.GetRigidbody().transform.position.y, hit.point.z) - _player.GetRigidbody().transform.position;
+                    var bounds = _player.GetRigidbody().GetComponent<CapsuleCollider>().radius;
+
+                    destination = _player.GetRigidbody().transform.localPosition + direction.normalized * (_dashForce * 0.8f - bounds);
                 }
+                else
+                {
+                    destination = _player.GetRigidbody().transform.localPosition;
+                }
+            }
 
-                _player.GetRigidbody().transform.position = Vector3.Lerp(_player.GetRigidbody().transform.position, destination, _dashCurve.Evaluate(elapsedTime / _dashDuration));
-
-
+            float elapsedTime = 0f;
+            while (elapsedTime < _dashDuration)
+            {
                 elapsedTime += Time.deltaTime;
+
+                _desiredPosition = Vector3.Lerp(startPosition, destination, _dashCurve.Evaluate(elapsedTime / _dashDuration));
+
                 yield return null;
             }
 
+            _desiredPosition = destination;
+
             trail.emitting = false;
             trail.enabled = false;
+
+            _player._canMove = true;
+            _player._isDashing = false;
+        }
+
+        private void LateUpdate()
+        {
+            if (_player._isDashing) {
+                _player.GetRigidbody().transform.localPosition = _desiredPosition;
+            }
         }
     }
 }

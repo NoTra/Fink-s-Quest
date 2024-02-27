@@ -115,6 +115,8 @@ namespace FinksQuest.Behavior
                 yield return null;
             }
 
+            Ball.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", endColor);
+
             Ball.GetComponent<Animation.FloatAnimation>().enabled = false;
         }
     }
